@@ -1,0 +1,34 @@
+mediaPreview:
+  operationId: mediaPreview
+  tags:
+    - media
+  summary: Получение preview URL для временного файла
+  description: Возвращает presigned URL для предпросмотра файла до подтверждения загрузки.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: mediaId
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+  responses:
+    "200":
+      description: Preview URL
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/media.yaml#/PreviewDownloadUrlResult
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse
+    "404":
+      description: Файл не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

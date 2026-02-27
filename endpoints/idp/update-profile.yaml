@@ -1,0 +1,43 @@
+updateProfile:
+  operationId: updateProfile
+  tags:
+    - auth
+    - profile
+  summary: Обновление профиля пользователя
+  description: Обновляет профиль текущего пользователя.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - fullName
+          additionalProperties: false
+          properties:
+            fullName:
+              type: string
+              minLength: 2
+              maxLength: 100
+              description: Полное имя пользователя
+  responses:
+    "200":
+      description: Обновлённый профиль
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/user.yaml#/User
+    "400":
+      description: Невалидное имя
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

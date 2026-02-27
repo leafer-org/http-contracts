@@ -1,0 +1,18 @@
+deleteAllSessions:
+  operationId: deleteAllSessions
+  tags:
+    - auth
+    - sessions
+  summary: Выход со всех устройств
+  description: Удаляет все сессии текущего пользователя, кроме текущей.
+  security:
+    - bearerAuth: []
+  responses:
+    "204":
+      description: Все сессии удалены
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

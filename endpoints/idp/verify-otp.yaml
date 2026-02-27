@@ -52,7 +52,7 @@ verifyOtp:
       content:
         application/json:
           schema:
-            $ref: ../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/ErrorResponse
     "403":
       description: Превышено количество попыток
       content:
@@ -77,4 +77,4 @@ verifyOtp:
       content:
         application/json:
           schema:
-            $ref: ../shared/error-response.yaml#/ThrottledErrorResponse
+            $ref: ../../shared/error-response.yaml#/ThrottledErrorResponse

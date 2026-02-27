@@ -1,0 +1,31 @@
+deleteSession:
+  operationId: deleteSession
+  tags:
+    - auth
+    - sessions
+  summary: Удаление сессии
+  description: Удаляет указанную сессию текущего пользователя.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: sessionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    "204":
+      description: Сессия удалена
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse
+    "404":
+      description: Сессия не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

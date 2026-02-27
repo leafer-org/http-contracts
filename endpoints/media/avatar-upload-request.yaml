@@ -12,17 +12,17 @@ avatarUploadRequest:
     content:
       application/json:
         schema:
-          $ref: ../shared/media.yaml#/GetMediaUploadUrlInput
+          $ref: ../../shared/media.yaml#/GetMediaUploadUrlInput
   responses:
     "200":
       description: Presigned URL для загрузки
       content:
         application/json:
           schema:
-            $ref: ../shared/media.yaml#/GetMediaUploadUrlResult
+            $ref: ../../shared/media.yaml#/GetMediaUploadUrlResult
     "401":
       description: Не авторизован
       content:
         application/json:
           schema:
-            $ref: ../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

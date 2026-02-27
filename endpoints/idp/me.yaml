@@ -13,10 +13,10 @@ getMe:
       content:
         application/json:
           schema:
-            $ref: ../shared/user.yaml#/User
+            $ref: ../../shared/user.yaml#/User
     "401":
       description: Не авторизован
       content:
         application/json:
           schema:
-            $ref: ../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

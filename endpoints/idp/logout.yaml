@@ -1,0 +1,17 @@
+logout:
+  operationId: logout
+  tags:
+    - auth
+  summary: Выход из аккаунта
+  description: Удаляет текущую сессию пользователя.
+  security:
+    - bearerAuth: []
+  responses:
+    "204":
+      description: Сессия удалена
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

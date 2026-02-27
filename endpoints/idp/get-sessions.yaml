@@ -1,0 +1,30 @@
+getMeSessions:
+  operationId: getMeSessions
+  tags:
+    - auth
+    - sessions
+  summary: Получение списка активных сессий
+  description: Возвращает список активных сессий текущего пользователя.
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: Список сессий
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - sessions
+            additionalProperties: false
+            properties:
+              sessions:
+                type: array
+                items:
+                  $ref: ../../shared/session.yaml#/UserSession
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

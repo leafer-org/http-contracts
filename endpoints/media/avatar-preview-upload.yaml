@@ -12,17 +12,17 @@ avatarPreviewUpload:
     content:
       application/json:
         schema:
-          $ref: ../shared/media.yaml#/LinkMediaData
+          $ref: ../../shared/media.yaml#/LinkMediaData
   responses:
     "200":
       description: URL превью аватара
       content:
         application/json:
           schema:
-            $ref: ../shared/user.yaml#/Avatar
+            $ref: ../../shared/user.yaml#/Avatar
     "401":
       description: Не авторизован
       content:
         application/json:
           schema:
-            $ref: ../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

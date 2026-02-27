@@ -12,27 +12,59 @@ components:
       scheme: bearer
       bearerFormat: JWT
 paths:
-  /banners:
-    get:
-      $ref: "./endpoints/banners.yaml#/getBanners"
+  # ── IDP: Auth ──────────────────────────────────────────
   /auth/request-otp:
     post:
-      $ref: "./endpoints/request-otp.yaml#/requestOtp"
+      $ref: "./endpoints/idp/request-otp.yaml#/requestOtp"
   /auth/verify-otp:
     post:
-      $ref: "./endpoints/verify-otp.yaml#/verifyOtp"
+      $ref: "./endpoints/idp/verify-otp.yaml#/verifyOtp"
   /auth/refresh:
     get:
-      $ref: "./endpoints/refresh.yaml#/refresh"
-  /me:
-    get:
-      $ref: "./endpoints/me.yaml#/getMe"
+      $ref: "./endpoints/idp/refresh.yaml#/refresh"
   /auth/complete-profile:
     post:
-      $ref: "./endpoints/complete-profile.yaml#/completeProfile"
+      $ref: "./endpoints/idp/complete-profile.yaml#/completeProfile"
+  /auth/logout:
+    post:
+      $ref: "./endpoints/idp/logout.yaml#/logout"
+
+  # ── IDP: Profile ───────────────────────────────────────
+  /me:
+    get:
+      $ref: "./endpoints/idp/me.yaml#/getMe"
+  /me/profile:
+    patch:
+      $ref: "./endpoints/idp/update-profile.yaml#/updateProfile"
+
+  # ── IDP: Sessions ──────────────────────────────────────
+  /me/sessions:
+    get:
+      $ref: "./endpoints/idp/get-sessions.yaml#/getMeSessions"
+    delete:
+      $ref: "./endpoints/idp/delete-all-sessions.yaml#/deleteAllSessions"
+  /me/sessions/{sessionId}:
+    delete:
+      $ref: "./endpoints/idp/delete-session.yaml#/deleteSession"
+
+  # ── Media ──────────────────────────────────────────────
   /media/avatar/upload-request:
     post:
-      $ref: "./endpoints/avatar-upload-request.yaml#/avatarUploadRequest"
+      $ref: "./endpoints/media/avatar-upload-request.yaml#/avatarUploadRequest"
   /media/avatar/preview-upload:
     post:
-      $ref: "./endpoints/avatar-preview-upload.yaml#/avatarPreviewUpload"
+      $ref: "./endpoints/media/avatar-preview-upload.yaml#/avatarPreviewUpload"
+  /media/upload-request:
+    post:
+      $ref: "./endpoints/media/media-upload-request.yaml#/mediaUploadRequest"
+  /media/confirm-upload:
+    post:
+      $ref: "./endpoints/media/media-confirm-upload.yaml#/mediaConfirmUpload"
+  /media/preview/{mediaId}:
+    get:
+      $ref: "./endpoints/media/media-preview.yaml#/mediaPreview"
+
+  # ── Banners ────────────────────────────────────────────
+  /banners:
+    get:
+      $ref: "./endpoints/banners/banners.yaml#/getBanners"

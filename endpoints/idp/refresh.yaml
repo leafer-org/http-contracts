@@ -16,10 +16,10 @@ refresh:
       content:
         application/json:
           schema:
-            $ref: ../shared/token.yaml#/TokenPair
+            $ref: ../../shared/token.yaml#/TokenPair
     "401":
       description: Невалидный refresh-токен
       content:
         application/json:
           schema:
-            $ref: ../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

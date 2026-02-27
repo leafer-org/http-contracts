@@ -18,7 +18,7 @@ schemas:
       isNew:
         type: boolean
       logo:
-        $ref: ../shared/banner-file.yaml#/BannerFile
+        $ref: ../../shared/banner-file.yaml#/BannerFile
       opacity:
         type: integer
         minimum: 0
@@ -61,17 +61,17 @@ getBanners:
         type: object
         properties:
           createdAt:
-            $ref: ../shared/date-range.yaml#/DateRange
+            $ref: ../../shared/date-range.yaml#/DateRange
     - name: pagination
       in: query
       required: false
       schema:
-        $ref: ../shared/pagination.yaml#/Pagination
+        $ref: ../../shared/pagination.yaml#/Pagination
     - name: sort
       in: query
       required: false
       schema:
-        $ref: ../shared/sort.yaml#/Sort
+        $ref: ../../shared/sort.yaml#/Sort
   responses:
     "200":
       description: List of banners
@@ -89,9 +89,9 @@ getBanners:
                 items:
                   $ref: "#/schemas/BannerEdge"
               pageInfo:
-                $ref: ../shared/page-info.yaml#/PageInfo
+                $ref: ../../shared/page-info.yaml#/PageInfo
               totalCount:
                 type: integer
                 minimum: 0
     "404":
-      $ref: ../shared/responses.yaml#/NotFoundError
+      $ref: ../../shared/responses.yaml#/NotFoundError

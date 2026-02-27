@@ -57,3 +57,57 @@ GetMediaUploadUrlResult:
     url:
       type: string
       format: uri
+
+UploadRequest:
+  type: object
+  required:
+    - name
+    - mimeType
+    - bucket
+  additionalProperties: false
+  properties:
+    name:
+      type: string
+      minLength: 1
+      maxLength: 255
+    mimeType:
+      type: string
+      maxLength: 255
+    bucket:
+      type: string
+      minLength: 1
+
+UploadRequestResult:
+  type: object
+  required:
+    - fileId
+    - uploadUrl
+  properties:
+    fileId:
+      type: string
+      minLength: 1
+    uploadUrl:
+      type: string
+      format: uri
+
+ConfirmUploadInput:
+  type: object
+  required:
+    - fileIds
+  additionalProperties: false
+  properties:
+    fileIds:
+      type: array
+      items:
+        type: string
+        minLength: 1
+      minItems: 1
+
+PreviewDownloadUrlResult:
+  type: object
+  required:
+    - url
+  properties:
+    url:
+      type: string
+      format: uri
