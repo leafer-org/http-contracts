@@ -1,0 +1,18 @@
+PageInfo:
+  type: object
+  required:
+    - hasNextPage
+    - hasPreviousPage
+  properties:
+    endCursor:
+      type:
+        - string
+        - "null"
+    hasNextPage:
+      type: boolean
+    hasPreviousPage:
+      type: boolean
+    startCursor:
+      type:
+        - string
+        - "null"

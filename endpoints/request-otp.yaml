@@ -1,0 +1,50 @@
+requestOtp:
+  operationId: requestOtp
+  tags:
+    - auth
+  summary: Запрос одноразового кода подтверждения
+  description: Создаёт и отправляет OTP пользователю.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - phoneNumber
+          additionalProperties: false
+          properties:
+            phoneNumber:
+              type: string
+              pattern: "^\\+?[1-9]\\d{9,14}$"
+              description: Телефон в формате E.164
+            channel:
+              type: string
+              enum:
+                - sms
+                - whatsapp
+              description: Канал доставки OTP
+            locale:
+              type: string
+              minLength: 2
+              maxLength: 5
+              description: Локаль для текстов уведомлений
+  responses:
+    "200":
+      description: OTP отправлен
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              nextRetrySec:
+                type: number
+                minimum: 1
+                description: Рекомендованная задержка до следующего запроса OTP
+    "429":
+      description: Слишком много запросов
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/error-response.yaml#/ThrottledErrorResponse

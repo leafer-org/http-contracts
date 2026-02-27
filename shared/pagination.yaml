@@ -1,0 +1,22 @@
+Pagination:
+  type: object
+  properties:
+    after:
+      type: string
+    before:
+      type: string
+    first:
+      type: integer
+      minimum: 1
+    last:
+      type: integer
+      minimum: 1
+
+ForwardPagination:
+  type: object
+  properties:
+    after:
+      type: string
+    first:
+      type: integer
+      minimum: 1

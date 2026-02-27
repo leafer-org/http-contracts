@@ -1,0 +1,36 @@
+completeProfile:
+  operationId: completeProfile
+  tags:
+    - auth
+    - profile
+  summary: Дополнение профиля пользователя
+  description: Обновляет профиль после первичного входа.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          properties:
+            fullName:
+              type: string
+              minLength: 1
+              maxLength: 80
+            avatarMedia:
+              $ref: ../shared/media.yaml#/LinkMediaData
+  responses:
+    "200":
+      description: Обновлённый профиль
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/user.yaml#/User
+    "400":
+      description: Некорректный запрос
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/error-response.yaml#/ErrorResponse

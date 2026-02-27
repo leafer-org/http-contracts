@@ -1,0 +1,28 @@
+avatarUploadRequest:
+  operationId: avatarUploadRequest
+  tags:
+    - media
+    - profile
+  summary: Получение presigned URL для загрузки аватара
+  description: Возвращает presigned URL и идентификатор медиа-объекта для аватара пользователя.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../shared/media.yaml#/GetMediaUploadUrlInput
+  responses:
+    "200":
+      description: Presigned URL для загрузки
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/media.yaml#/GetMediaUploadUrlResult
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/error-response.yaml#/ErrorResponse

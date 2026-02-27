@@ -1,0 +1,80 @@
+verifyOtp:
+  operationId: verifyOtp
+  tags:
+    - auth
+  summary: Подтверждение одноразового кода
+  description: Проверяет OTP и возвращает пару токенов.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - phoneNumber
+            - code
+          additionalProperties: false
+          properties:
+            phoneNumber:
+              type: string
+              pattern: "^\\+?[1-9]\\d{9,14}$"
+              description: Телефон в формате E.164
+            code:
+              type: string
+              pattern: "^\\d{4,6}$"
+              description: Код подтверждения из SMS
+  responses:
+    "200":
+      description: Авторизация успешна
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - accessToken
+              - refreshToken
+              - needProfile
+            additionalProperties: false
+            properties:
+              accessToken:
+                type: string
+                minLength: 16
+                description: JWT access-токен
+              refreshToken:
+                type: string
+                minLength: 16
+                description: JWT refresh-токен
+              needProfile:
+                type: boolean
+                description: Признак необходимости дозаполнить профиль
+    "400":
+      description: Некорректный запрос
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/error-response.yaml#/ErrorResponse
+    "403":
+      description: Превышено количество попыток
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - code
+            additionalProperties: false
+            properties:
+              code:
+                type: string
+                enum:
+                  - otp_attempts_exceeded
+              message:
+                type: string
+              retryAfterSec:
+                type: number
+                minimum: 60
+    "429":
+      description: Слишком много запросов
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/error-response.yaml#/ThrottledErrorResponse

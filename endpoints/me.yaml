@@ -1,0 +1,22 @@
+getMe:
+  operationId: getMe
+  tags:
+    - auth
+    - profile
+  summary: Получение текущего пользователя
+  description: Возвращает профиль текущего пользователя.
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: Профиль пользователя
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/user.yaml#/User
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/error-response.yaml#/ErrorResponse

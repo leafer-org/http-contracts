@@ -1,0 +1,34 @@
+UnauthorizedError:
+  description: Unauthorized
+  content:
+    application/json:
+      schema:
+        $ref: "#/schemas/Error"
+
+ForbiddenError:
+  description: Forbidden
+  content:
+    application/json:
+      schema:
+        $ref: "#/schemas/Error"
+
+NotFoundError:
+  description: Resource not found
+  content:
+    application/json:
+      schema:
+        $ref: "#/schemas/Error"
+
+schemas:
+  Error:
+    type: object
+    required:
+      - statusCode
+      - message
+    properties:
+      statusCode:
+        type: integer
+      message:
+        type: string
+      error:
+        type: string

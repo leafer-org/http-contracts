@@ -1,0 +1,38 @@
+openapi: 3.1.0
+servers:
+  - url: /
+info:
+  version: 1.0.0
+  title: Playerok OpenAPI Schema
+  description: Playerok OpenAPI Schema
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /banners:
+    get:
+      $ref: "./endpoints/banners.yaml#/getBanners"
+  /auth/request-otp:
+    post:
+      $ref: "./endpoints/request-otp.yaml#/requestOtp"
+  /auth/verify-otp:
+    post:
+      $ref: "./endpoints/verify-otp.yaml#/verifyOtp"
+  /auth/refresh:
+    get:
+      $ref: "./endpoints/refresh.yaml#/refresh"
+  /me:
+    get:
+      $ref: "./endpoints/me.yaml#/getMe"
+  /auth/complete-profile:
+    post:
+      $ref: "./endpoints/complete-profile.yaml#/completeProfile"
+  /media/avatar/upload-request:
+    post:
+      $ref: "./endpoints/avatar-upload-request.yaml#/avatarUploadRequest"
+  /media/avatar/preview-upload:
+    post:
+      $ref: "./endpoints/avatar-preview-upload.yaml#/avatarPreviewUpload"

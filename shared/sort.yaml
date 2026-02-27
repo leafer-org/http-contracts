@@ -1,0 +1,11 @@
+Sort:
+  type: object
+  properties:
+    direction:
+      $ref: "#/SortDirection"
+    field:
+      type: string
+
+SortDirection:
+  type: string
+  enum: [ASC, DESC]

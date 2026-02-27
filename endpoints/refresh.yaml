@@ -1,0 +1,25 @@
+refresh:
+  operationId: refresh
+  tags:
+    - auth
+  summary: Обновление токенов авторизации
+  description: Обновляет токены по refresh-cookie или заголовку.
+  parameters:
+    - name: x-refresh-token
+      in: header
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: Токены обновлены
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/token.yaml#/TokenPair
+    "401":
+      description: Невалидный refresh-токен
+      content:
+        application/json:
+          schema:
+            $ref: ../shared/error-response.yaml#/ErrorResponse

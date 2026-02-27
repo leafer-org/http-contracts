@@ -1,0 +1,14 @@
+TokenPair:
+  type: object
+  required:
+    - accessToken
+    - refreshToken
+  properties:
+    accessToken:
+      type: string
+      minLength: 16
+      description: JWT access-токен
+    refreshToken:
+      type: string
+      minLength: 16
+      description: JWT refresh-токен

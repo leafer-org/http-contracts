@@ -1,0 +1,49 @@
+Avatar:
+  type: object
+  required:
+    - largeUrl
+    - mediumUrl
+    - smallUrl
+    - thumbUrl
+  properties:
+    largeUrl:
+      type: string
+      format: uri
+    mediumUrl:
+      type: string
+      format: uri
+    smallUrl:
+      type: string
+      format: uri
+    thumbUrl:
+      type: string
+      format: uri
+
+User:
+  type: object
+  required:
+    - id
+    - phoneNumber
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      type: string
+      format: uuid
+      description: Уникальный идентификатор пользователя
+    phoneNumber:
+      type: string
+      pattern: "^\\+?[1-9]\\d{9,14}$"
+      description: Телефон в формате E.164
+    fullName:
+      type: string
+      minLength: 1
+      maxLength: 80
+    avatar:
+      $ref: "#/Avatar"
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time

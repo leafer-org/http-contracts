@@ -1,0 +1,12 @@
+BannerFile:
+  type: object
+  required:
+    - id
+    - url
+  properties:
+    id:
+      type: string
+      format: uuid
+    url:
+      type: string
+      format: uri

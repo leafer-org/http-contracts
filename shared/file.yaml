@@ -1,0 +1,18 @@
+File:
+  type: object
+  required:
+    - filename
+    - id
+    - mime
+    - url
+  properties:
+    filename:
+      type: string
+    id:
+      type: string
+      format: uuid
+    mime:
+      type: string
+    url:
+      type: string
+      format: uri

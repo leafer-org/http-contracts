@@ -1,0 +1,97 @@
+schemas:
+  Banner:
+    type: object
+    required:
+      - createdAt
+      - id
+      - isNew
+      - logo
+      - opacity
+      - sequence
+    properties:
+      createdAt:
+        type: string
+        format: date-time
+      id:
+        type: string
+        format: uuid
+      isNew:
+        type: boolean
+      logo:
+        $ref: ../shared/banner-file.yaml#/BannerFile
+      opacity:
+        type: integer
+        minimum: 0
+      sequence:
+        type: integer
+        minimum: 0
+      subtitle:
+        type:
+          - string
+          - "null"
+      title:
+        type:
+          - string
+          - "null"
+      url:
+        type:
+          - string
+          - "null"
+  BannerEdge:
+    type: object
+    required:
+      - node
+    properties:
+      cursor:
+        type:
+          - string
+          - "null"
+      node:
+        $ref: "#/schemas/Banner"
+getBanners:
+  operationId: getBanners
+  tags:
+    - Banners
+  description: Get all banners
+  parameters:
+    - name: filter
+      in: query
+      required: false
+      schema:
+        type: object
+        properties:
+          createdAt:
+            $ref: ../shared/date-range.yaml#/DateRange
+    - name: pagination
+      in: query
+      required: false
+      schema:
+        $ref: ../shared/pagination.yaml#/Pagination
+    - name: sort
+      in: query
+      required: false
+      schema:
+        $ref: ../shared/sort.yaml#/Sort
+  responses:
+    "200":
+      description: List of banners
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - edges
+              - pageInfo
+              - totalCount
+            properties:
+              edges:
+                type: array
+                items:
+                  $ref: "#/schemas/BannerEdge"
+              pageInfo:
+                $ref: ../shared/page-info.yaml#/PageInfo
+              totalCount:
+                type: integer
+                minimum: 0
+    "404":
+      $ref: ../shared/responses.yaml#/NotFoundError

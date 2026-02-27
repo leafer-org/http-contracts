@@ -1,0 +1,32 @@
+ErrorResponse:
+  type: object
+  required:
+    - code
+  properties:
+    code:
+      type: string
+      description: Код ошибки для обработки на клиенте
+    message:
+      type: string
+      description: Человекочитаемое описание ошибки
+    details:
+      type: object
+      additionalProperties: true
+      description: Дополнительные детали ошибки
+
+ThrottledErrorResponse:
+  type: object
+  required:
+    - code
+    - retryAfterSec
+  properties:
+    code:
+      type: string
+      enum:
+        - throttled
+    message:
+      type: string
+    retryAfterSec:
+      type: number
+      minimum: 1
+      description: Рекомендованная задержка перед повторной попыткой
