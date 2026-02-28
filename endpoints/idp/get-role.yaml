@@ -1,0 +1,28 @@
+getRole:
+  operationId: getRole
+  tags:
+    - roles
+  summary: Получение роли по ID
+  description: Возвращает детальную информацию о роли.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    "200":
+      description: Роль
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/role.yaml#/Role
+    "404":
+      description: Роль не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

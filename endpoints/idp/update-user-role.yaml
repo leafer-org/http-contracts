@@ -1,0 +1,41 @@
+updateUserRole:
+  operationId: updateUserRole
+  tags:
+    - roles
+    - users
+  summary: Назначение роли пользователю
+  description: Обновляет роль пользователя. Все сессии пользователя будут удалены.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - roleId
+          properties:
+            roleId:
+              type: string
+              format: uuid
+  responses:
+    "200":
+      description: Роль пользователя обновлена
+      content:
+        application/json:
+          schema:
+            type: object
+    "404":
+      description: Пользователь или роль не найдены
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

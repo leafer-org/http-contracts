@@ -47,6 +47,26 @@ paths:
     delete:
       $ref: "./endpoints/idp/delete-session.yaml#/deleteSession"
 
+  # ── IDP: Roles ───────────────────────────────────────
+  /roles:
+    get:
+      $ref: "./endpoints/idp/get-roles.yaml#/getRoles"
+    post:
+      $ref: "./endpoints/idp/create-role.yaml#/createRole"
+  /roles/permissions-schema:
+    get:
+      $ref: "./endpoints/idp/get-permissions-schema.yaml#/getPermissionsSchema"
+  /roles/{roleId}:
+    get:
+      $ref: "./endpoints/idp/get-role.yaml#/getRole"
+    patch:
+      $ref: "./endpoints/idp/update-role.yaml#/updateRole"
+    delete:
+      $ref: "./endpoints/idp/delete-role.yaml#/deleteRole"
+  /users/{userId}/role:
+    patch:
+      $ref: "./endpoints/idp/update-user-role.yaml#/updateUserRole"
+
   # ── Media ──────────────────────────────────────────────
   /media/avatar/upload-request:
     post:

@@ -1,0 +1,26 @@
+Role:
+  type: object
+  required:
+    - id
+    - name
+    - permissions
+    - isStatic
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      type: string
+      format: uuid
+    name:
+      type: string
+    permissions:
+      type: object
+      additionalProperties: true
+    isStatic:
+      type: boolean
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time

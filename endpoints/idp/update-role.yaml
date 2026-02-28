@@ -1,0 +1,46 @@
+updateRole:
+  operationId: updateRole
+  tags:
+    - roles
+  summary: Обновление разрешений роли
+  description: Обновляет разрешения указанной роли. Статические роли не могут быть изменены.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - permissions
+          properties:
+            permissions:
+              type: object
+              additionalProperties: true
+  responses:
+    "200":
+      description: Роль обновлена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/role.yaml#/Role
+    "403":
+      description: Нельзя изменить статическую роль
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse
+    "404":
+      description: Роль не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

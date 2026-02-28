@@ -1,0 +1,28 @@
+getRoles:
+  operationId: getRoles
+  tags:
+    - roles
+  summary: Получение списка всех ролей
+  description: Возвращает список всех ролей в системе.
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: Список ролей
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - roles
+            properties:
+              roles:
+                type: array
+                items:
+                  $ref: ../../shared/role.yaml#/Role
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

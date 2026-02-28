@@ -1,0 +1,42 @@
+createRole:
+  operationId: createRole
+  tags:
+    - roles
+  summary: Создание роли
+  description: Создаёт новую роль с указанными разрешениями.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              minLength: 1
+            permissions:
+              type: object
+              additionalProperties: true
+  responses:
+    "201":
+      description: Роль создана
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/role.yaml#/Role
+    "400":
+      description: Роль уже существует
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse

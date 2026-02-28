@@ -1,0 +1,46 @@
+deleteRole:
+  operationId: deleteRole
+  tags:
+    - roles
+  summary: Удаление роли
+  description: Удаляет роль и переназначает всех пользователей на замещающую роль. Статические роли не могут быть удалены.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - replacementRoleId
+          properties:
+            replacementRoleId:
+              type: string
+              format: uuid
+  responses:
+    "200":
+      description: Роль удалена
+      content:
+        application/json:
+          schema:
+            type: object
+    "403":
+      description: Нельзя удалить статическую роль
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse
+    "404":
+      description: Роль не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/ErrorResponse
