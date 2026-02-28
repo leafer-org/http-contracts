@@ -29,24 +29,41 @@ verifyOtp:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - accessToken
-              - refreshToken
-              - needProfile
-            additionalProperties: false
-            properties:
-              accessToken:
-                type: string
-                minLength: 16
-                description: JWT access-токен
-              refreshToken:
-                type: string
-                minLength: 16
-                description: JWT refresh-токен
-              needProfile:
-                type: boolean
-                description: Признак необходимости дозаполнить профиль
+            discriminator:
+              propertyName: type
+            oneOf:
+              - type: object
+                required:
+                  - type
+                  - accessToken
+                  - refreshToken
+                additionalProperties: false
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - authenticated
+                  accessToken:
+                    type: string
+                    minLength: 16
+                    description: JWT access-токен
+                  refreshToken:
+                    type: string
+                    minLength: 16
+                    description: JWT refresh-токен
+              - type: object
+                required:
+                  - type
+                  - registrationSessionId
+                additionalProperties: false
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - new_registration
+                  registrationSessionId:
+                    type: string
+                    description: Идентификатор сессии регистрации
     "400":
       description: Некорректный запрос
       content:

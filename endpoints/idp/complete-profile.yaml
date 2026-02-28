@@ -5,16 +5,20 @@ completeProfile:
     - profile
   summary: Дополнение профиля пользователя
   description: Обновляет профиль после первичного входа.
-  security:
-    - bearerAuth: []
   requestBody:
     required: true
     content:
       application/json:
         schema:
           type: object
+          required:
+            - registrationSessionId
           additionalProperties: false
           properties:
+            registrationSessionId:
+              type: string
+              minLength: 1
+              description: Идентификатор сессии регистрации из verifyOtp
             fullName:
               type: string
               minLength: 1
@@ -23,11 +27,27 @@ completeProfile:
               $ref: ../../shared/media.yaml#/LinkMediaData
   responses:
     "200":
-      description: Обновлённый профиль
+      description: Профиль создан, токены выданы
       content:
         application/json:
           schema:
-            $ref: ../../shared/user.yaml#/User
+            type: object
+            required:
+              - user
+              - accessToken
+              - refreshToken
+            additionalProperties: false
+            properties:
+              user:
+                $ref: ../../shared/user.yaml#/User
+              accessToken:
+                type: string
+                minLength: 16
+                description: JWT access-токен
+              refreshToken:
+                type: string
+                minLength: 16
+                description: JWT refresh-токен
     "400":
       description: Некорректный запрос
       content:
