@@ -4,8 +4,7 @@ mediaConfirmUpload:
     - media
   summary: Подтверждение загрузки файлов
   description: Переводит загруженные файлы из временного хранилища в постоянное.
-  security:
-    - bearerAuth: []
+  security: []
   requestBody:
     required: true
     content:
@@ -19,15 +18,29 @@ mediaConfirmUpload:
         application/json:
           schema:
             type: object
+    "400":
+      description: Ошибка валидации / Доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "401":
       description: Не авторизован
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "404":
       description: Файл не найден
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

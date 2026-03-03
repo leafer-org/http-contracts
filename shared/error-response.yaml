@@ -1,15 +1,20 @@
-ErrorResponse:
+DomainErrorResponse:
   type: object
   required:
-    - code
+    - type
+    - isDomain
   properties:
-    code:
+    type:
       type: string
       description: Код ошибки для обработки на клиенте
     message:
       type: string
       description: Человекочитаемое описание ошибки
-    details:
+    isDomain:
+      type: boolean
+      enum: 
+       - true
+    data:
       type: object
       additionalProperties: true
       description: Дополнительные детали ошибки
@@ -17,16 +22,77 @@ ErrorResponse:
 ThrottledErrorResponse:
   type: object
   required:
-    - code
-    - retryAfterSec
+    - type
+    - isDomain
+    - data
   properties:
-    code:
+    type:
       type: string
       enum:
         - throttled
+    isDomain:
+      type: boolean
+      enum: 
+       - true
     message:
       type: string
-    retryAfterSec:
-      type: number
-      minimum: 1
-      description: Рекомендованная задержка перед повторной попыткой
+    data:
+      type: object
+      required:
+       - retryAfterSec
+      properties:
+        retryAfterSec:
+          type: number
+          minimum: 1
+          description: Рекомендованная задержка перед повторной попыткой
+
+OpenApiValidationError:
+  type: object
+  required:
+    - statusCode
+    - message
+    - errors
+    - isDomain
+  properties:
+    statusCode:
+      type: integer
+      description: HTTP код ответа
+    isDomain:
+      type: boolean
+      enum:
+       - false
+    message:
+      type: string
+      description: Человекочитаемое описание ошибки
+    errors:
+      type: array
+      items:
+        $ref: "#/ErrorDetail"
+
+ErrorDetail:
+  type: object
+  required:
+    - errorCode
+    - message
+    - path
+  properties:
+    errorCode:
+      type: string
+      description: Код ошибки для обработки на клиенте
+    message:
+      type: string
+      description: Человекочитаемое описание ошибки
+    path:
+      type: string
+      description: Путь к полю с ошибкой
+    data:
+      type: object
+      additionalProperties: true
+      description: Дополнительные детали ошибки
+
+OpenApiErrorResponse:
+  content:
+    'application/json':
+      $ref: '#/OpenApiValidationError'
+  
+

@@ -4,8 +4,7 @@ mediaPreview:
     - media
   summary: Получение preview URL для временного файла
   description: Возвращает presigned URL для предпросмотра файла до подтверждения загрузки.
-  security:
-    - bearerAuth: []
+  security: []
   parameters:
     - name: mediaId
       in: path
@@ -20,15 +19,27 @@ mediaPreview:
         application/json:
           schema:
             $ref: ../../shared/media.yaml#/PreviewDownloadUrlResult
+    "400":
+      description: Ошибка валидации
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
     "401":
       description: Не авторизован
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "404":
       description: Файл не найден
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

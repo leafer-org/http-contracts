@@ -49,8 +49,22 @@ completeProfile:
                 minLength: 16
                 description: JWT refresh-токен
     "400":
-      description: Некорректный запрос
+      description: Ошибка валидации / Доменная ошибка
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

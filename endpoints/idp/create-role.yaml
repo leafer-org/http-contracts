@@ -29,14 +29,42 @@ createRole:
           schema:
             $ref: ../../shared/role.yaml#/Role
     "400":
-      description: Роль уже существует
+      description: Ошибка валидации или роль уже существует
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - type: object
+                required:
+                  - type
+                  - isDomain
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - role_already_exists
+                  message:
+                    type: string
+                  isDomain:
+                    type: boolean
+                    enum:
+                      - true
     "403":
       description: Нет доступа
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Роль не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

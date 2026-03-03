@@ -32,15 +32,29 @@ deleteRole:
         application/json:
           schema:
             type: object
+    "400":
+      description: Ошибка валидации / Доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "403":
       description: Нельзя удалить статическую роль
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "404":
       description: Роль не найдена
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

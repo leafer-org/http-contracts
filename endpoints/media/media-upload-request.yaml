@@ -4,8 +4,7 @@ mediaUploadRequest:
     - media
   summary: Получение presigned URL для загрузки файла
   description: Возвращает presigned URL и идентификатор файла для загрузки.
-  security:
-    - bearerAuth: []
+  security: []
   requestBody:
     required: true
     content:
@@ -19,9 +18,29 @@ mediaUploadRequest:
         application/json:
           schema:
             $ref: ../../shared/media.yaml#/UploadRequestResult
+    "400":
+      description: Ошибка валидации / Доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "401":
       description: Не авторизован
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Файл не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

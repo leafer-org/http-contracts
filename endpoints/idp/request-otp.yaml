@@ -42,9 +42,47 @@ requestOtp:
                 type: number
                 minimum: 1
                 description: Рекомендованная задержка до следующего запроса OTP
+    "400":
+      description: Ошибка валидации / Доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Превышено количество попыток
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - type
+              - isDomain
+            properties:
+              type:
+                type: string
+                enum:
+                  - login_blocked
+              message:
+                type: string
+              isDomain:
+                type: boolean
+                enum:
+                  - true
+              retryAfterSec:
+                type: number
+                minimum: 1
+                description: Рекомендованная задержка перед повторной попыткой
     "429":
       description: Слишком много запросов
       content:
         application/json:
           schema:
             $ref: ../../shared/error-response.yaml#/ThrottledErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

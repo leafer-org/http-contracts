@@ -1,0 +1,91 @@
+searchAdminUsers:
+  operationId: searchAdminUsers
+  tags:
+    - admin
+    - users
+  summary: Поиск пользователей (admin)
+  description: Поиск пользователей с фильтрацией по роли и текстовому запросу.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: query
+      in: query
+      schema:
+        type: string
+      description: Текстовый поисковый запрос
+    - name: role
+      in: query
+      schema:
+        type: string
+      description: Фильтр по роли
+    - name: from
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+      description: Смещение для пагинации
+    - name: size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Размер страницы
+  responses:
+    "200":
+      description: Результаты поиска
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - users
+              - total
+            properties:
+              users:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - userId
+                    - phoneNumber
+                    - fullName
+                    - role
+                    - createdAt
+                    - updatedAt
+                  properties:
+                    userId:
+                      type: string
+                      format: uuid
+                    phoneNumber:
+                      type: string
+                    fullName:
+                      type: string
+                    role:
+                      type: string
+                    createdAt:
+                      type: string
+                      format: date-time
+                    updatedAt:
+                      type: string
+                      format: date-time
+              total:
+                type: integer
+    "400":
+      description: Ошибка валидации
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

@@ -65,11 +65,13 @@ verifyOtp:
                     type: string
                     description: Идентификатор сессии регистрации
     "400":
-      description: Некорректный запрос
+      description: Ошибка валидации / Доменная ошибка
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/ErrorResponse
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "403":
       description: Превышено количество попыток
       content:
@@ -77,15 +79,19 @@ verifyOtp:
           schema:
             type: object
             required:
-              - code
-            additionalProperties: false
+              - type
+              - isDomain
             properties:
-              code:
+              type:
                 type: string
                 enum:
-                  - otp_attempts_exceeded
+                  - login_blocked
               message:
                 type: string
+              isDomain:
+                type: boolean
+                enum:
+                  - true
               retryAfterSec:
                 type: number
                 minimum: 60
@@ -95,3 +101,9 @@ verifyOtp:
         application/json:
           schema:
             $ref: ../../shared/error-response.yaml#/ThrottledErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
