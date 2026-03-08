@@ -1,0 +1,330 @@
+ItemPayment:
+  type: object
+  required:
+    - strategy
+  properties:
+    strategy:
+      type: string
+      enum: [free, one-time, subscription]
+    price:
+      type:
+        - number
+        - "null"
+
+ItemOwnerSummary:
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+    avatarId:
+      type:
+        - string
+        - "null"
+
+ItemLocationSummary:
+  type: object
+  required:
+    - cityId
+  properties:
+    cityId:
+      type: string
+    address:
+      type:
+        - string
+        - "null"
+
+ItemListView:
+  type: object
+  required:
+    - itemId
+    - typeId
+    - title
+    - reviewCount
+    - categoryIds
+  properties:
+    itemId:
+      type: string
+    typeId:
+      type: string
+    title:
+      type: string
+    description:
+      type:
+        - string
+        - "null"
+    imageId:
+      type:
+        - string
+        - "null"
+    price:
+      oneOf:
+        - $ref: "#/ItemPayment"
+        - type: "null"
+    rating:
+      type:
+        - number
+        - "null"
+    reviewCount:
+      type: integer
+    owner:
+      oneOf:
+        - $ref: "#/ItemOwnerSummary"
+        - type: "null"
+    location:
+      oneOf:
+        - $ref: "#/ItemLocationSummary"
+        - type: "null"
+    categoryIds:
+      type: array
+      items:
+        type: string
+
+LikedItemView:
+  allOf:
+    - $ref: "#/ItemListView"
+    - type: object
+      required:
+        - likedAt
+      properties:
+        likedAt:
+          type: string
+          format: date-time
+
+CursorPaginatedItems:
+  type: object
+  required:
+    - items
+  properties:
+    items:
+      type: array
+      items:
+        $ref: "#/ItemListView"
+    nextCursor:
+      type:
+        - string
+        - "null"
+
+CursorPaginatedLikedItems:
+  type: object
+  required:
+    - items
+  properties:
+    items:
+      type: array
+      items:
+        $ref: "#/LikedItemView"
+    nextCursor:
+      type:
+        - string
+        - "null"
+
+CategoryListItem:
+  type: object
+  required:
+    - categoryId
+    - name
+    - childCount
+    - itemCount
+  properties:
+    categoryId:
+      type: string
+    name:
+      type: string
+    iconId:
+      type:
+        - string
+        - "null"
+    childCount:
+      type: integer
+      minimum: 0
+    itemCount:
+      type: integer
+      minimum: 0
+
+AttributeSchema:
+  oneOf:
+    - type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [text]
+    - type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [boolean]
+    - type: object
+      required: [type, options]
+      properties:
+        type:
+          type: string
+          enum: [enum]
+        options:
+          type: array
+          items:
+            type: string
+    - type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [number]
+        min:
+          type: number
+        max:
+          type: number
+
+AttributeFilter:
+  type: object
+  required:
+    - attributeId
+    - name
+    - schema
+  properties:
+    attributeId:
+      type: string
+    name:
+      type: string
+    schema:
+      $ref: "#/AttributeSchema"
+
+TypeFilter:
+  type: object
+  required:
+    - typeId
+    - name
+  properties:
+    typeId:
+      type: string
+    name:
+      type: string
+
+CommonFilters:
+  type: object
+  required:
+    - hasPriceRange
+    - hasRating
+    - hasLocation
+    - hasSchedule
+    - hasEventDateTime
+  properties:
+    hasPriceRange:
+      type: boolean
+    hasRating:
+      type: boolean
+    hasLocation:
+      type: boolean
+    hasSchedule:
+      type: boolean
+    hasEventDateTime:
+      type: boolean
+
+CategoryFilters:
+  type: object
+  required:
+    - categoryId
+    - attributeFilters
+    - typeFilters
+    - commonFilters
+  properties:
+    categoryId:
+      type: string
+    attributeFilters:
+      type: array
+      items:
+        $ref: "#/AttributeFilter"
+    typeFilters:
+      type: array
+      items:
+        $ref: "#/TypeFilter"
+    commonFilters:
+      $ref: "#/CommonFilters"
+
+SearchFacetCategory:
+  type: object
+  required:
+    - categoryId
+    - name
+    - count
+  properties:
+    categoryId:
+      type: string
+    name:
+      type: string
+    count:
+      type: integer
+
+SearchFacetType:
+  type: object
+  required:
+    - typeId
+    - name
+    - count
+  properties:
+    typeId:
+      type: string
+    name:
+      type: string
+    count:
+      type: integer
+
+SearchFacetAttributeValue:
+  type: object
+  required:
+    - value
+    - count
+  properties:
+    value:
+      type: string
+    count:
+      type: integer
+
+SearchFacetAttribute:
+  type: object
+  required:
+    - attributeId
+    - name
+    - values
+  properties:
+    attributeId:
+      type: string
+    name:
+      type: string
+    values:
+      type: array
+      items:
+        $ref: "#/SearchFacetAttributeValue"
+
+SearchFacets:
+  type: object
+  required:
+    - categories
+    - types
+    - attributes
+  properties:
+    categories:
+      type: array
+      items:
+        $ref: "#/SearchFacetCategory"
+    types:
+      type: array
+      items:
+        $ref: "#/SearchFacetType"
+    priceRange:
+      oneOf:
+        - type: object
+          required: [min, max]
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+        - type: "null"
+    attributes:
+      type: array
+      items:
+        $ref: "#/SearchFacetAttribute"

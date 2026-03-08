@@ -1,0 +1,90 @@
+searchItems:
+  operationId: searchItems
+  tags:
+    - Discovery
+  description: Полнотекстовый поиск товаров через Meilisearch с динамическими фасетными фильтрами
+  parameters:
+    - name: query
+      in: query
+      required: true
+      schema:
+        type: string
+      description: Поисковый запрос
+    - name: cityId
+      in: query
+      required: true
+      schema:
+        type: string
+      description: ID города
+    - name: ageGroup
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [adults, children, all]
+        default: adults
+      description: Возрастная группа
+    - name: categoryIds
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Фильтр по категориям (через запятую)
+    - name: typeIds
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Фильтр по типам товара (через запятую)
+    - name: priceMin
+      in: query
+      required: false
+      schema:
+        type: number
+      description: Минимальная цена
+    - name: priceMax
+      in: query
+      required: false
+      schema:
+        type: number
+      description: Максимальная цена
+    - name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Курсор для пагинации
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Количество элементов на странице
+  responses:
+    "200":
+      description: Результаты поиска с фасетами
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - items
+              - facets
+              - total
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: ../../shared/discovery.yaml#/ItemListView
+              facets:
+                $ref: ../../shared/discovery.yaml#/SearchFacets
+              nextCursor:
+                type:
+                  - string
+                  - "null"
+              total:
+                type: integer
+                minimum: 0

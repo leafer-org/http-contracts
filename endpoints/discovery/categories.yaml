@@ -1,0 +1,130 @@
+getCategories:
+  operationId: getCategories
+  tags:
+    - Discovery
+  description: Список дочерних категорий с количеством товаров
+  parameters:
+    - name: parentCategoryId
+      in: query
+      required: false
+      schema:
+        type: string
+      description: ID родительской категории. Если не указан — возвращает корневые категории.
+  responses:
+    "200":
+      description: Список категорий
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../shared/discovery.yaml#/CategoryListItem
+
+getCategoryItems:
+  operationId: getCategoryItems
+  tags:
+    - Discovery
+  description: Товары в категории с фильтрами и сортировкой
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID категории
+    - name: sort
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [personal, price-asc, price-desc, rating-desc, newest]
+        default: personal
+      description: Режим сортировки
+    - name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Курсор для пагинации
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Количество элементов на странице
+    - name: cityId
+      in: query
+      required: false
+      schema:
+        type: string
+      description: ID города для гео-фильтрации
+    - name: ageGroup
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [adults, children, all]
+        default: adults
+      description: Возрастная группа
+    - name: typeIds
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Фильтр по типам товара (через запятую)
+    - name: priceMin
+      in: query
+      required: false
+      schema:
+        type: number
+      description: Минимальная цена
+    - name: priceMax
+      in: query
+      required: false
+      schema:
+        type: number
+      description: Максимальная цена
+    - name: minRating
+      in: query
+      required: false
+      schema:
+        type: number
+        minimum: 0
+        maximum: 5
+      description: Минимальный рейтинг
+  responses:
+    "200":
+      description: Список товаров с курсором
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/discovery.yaml#/CursorPaginatedItems
+
+getCategoryFilters:
+  operationId: getCategoryFilters
+  tags:
+    - Discovery
+  description: Доступные фильтры для страницы категории
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID категории
+  responses:
+    "200":
+      description: Фильтры категории
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/discovery.yaml#/CategoryFilters
+    "404":
+      description: Категория не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

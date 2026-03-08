@@ -87,3 +87,23 @@ paths:
   /banners:
     get:
       $ref: "./endpoints/banners/banners.yaml#/getBanners"
+
+  # ── Discovery ────────────────────────────────────────
+  /categories:
+    get:
+      $ref: "./endpoints/discovery/categories.yaml#/getCategories"
+  /categories/{id}/items:
+    get:
+      $ref: "./endpoints/discovery/categories.yaml#/getCategoryItems"
+  /categories/{id}/filters:
+    get:
+      $ref: "./endpoints/discovery/categories.yaml#/getCategoryFilters"
+  /feed:
+    get:
+      $ref: "./endpoints/discovery/feed.yaml#/getFeed"
+  /search:
+    get:
+      $ref: "./endpoints/discovery/search.yaml#/searchItems"
+  /liked-items:
+    get:
+      $ref: "./endpoints/discovery/liked-items.yaml#/getLikedItems"
