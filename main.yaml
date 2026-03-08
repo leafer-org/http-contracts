@@ -107,3 +107,8 @@ paths:
   /liked-items:
     get:
       $ref: "./endpoints/discovery/liked-items.yaml#/getLikedItems"
+  /items/{itemId}/like:
+    post:
+      $ref: "./endpoints/discovery/like-item.yaml#/likeItem"
+    delete:
+      $ref: "./endpoints/discovery/like-item.yaml#/unlikeItem"

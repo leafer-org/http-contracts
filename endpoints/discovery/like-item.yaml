@@ -1,0 +1,43 @@
+likeItem:
+  operationId: likeItem
+  tags:
+    - Discovery
+  description: Поставить лайк на товар
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: itemId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID товара
+  responses:
+    "204":
+      description: Лайк поставлен
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "404":
+      $ref: ../../shared/responses.yaml#/NotFoundError
+
+unlikeItem:
+  operationId: unlikeItem
+  tags:
+    - Discovery
+  description: Убрать лайк с товара
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: itemId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID товара
+  responses:
+    "204":
+      description: Лайк убран
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
