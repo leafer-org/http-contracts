@@ -112,3 +112,37 @@ paths:
       $ref: "./endpoints/discovery/like-item.yaml#/likeItem"
     delete:
       $ref: "./endpoints/discovery/like-item.yaml#/unlikeItem"
+
+  # ── CMS: Categories ──────────────────────────────────────
+  /cms/categories:
+    get:
+      $ref: "./endpoints/cms/categories.yaml#/getCmsCategories"
+    post:
+      $ref: "./endpoints/cms/categories.yaml#/createCmsCategory"
+  /cms/categories/{id}:
+    get:
+      $ref: "./endpoints/cms/categories.yaml#/getCmsCategoryDetail"
+    patch:
+      $ref: "./endpoints/cms/categories.yaml#/updateCmsCategory"
+  /cms/categories/{id}/publish:
+    post:
+      $ref: "./endpoints/cms/categories.yaml#/publishCmsCategory"
+  /cms/categories/{id}/unpublish:
+    post:
+      $ref: "./endpoints/cms/categories.yaml#/unpublishCmsCategory"
+  /cms/categories/{id}/attributes:
+    post:
+      $ref: "./endpoints/cms/categories.yaml#/addCmsCategoryAttribute"
+  /cms/categories/{id}/attributes/{attributeId}:
+    delete:
+      $ref: "./endpoints/cms/categories.yaml#/removeCmsCategoryAttribute"
+
+  # ── CMS: Item Types ──────────────────────────────────────
+  /cms/item-types:
+    get:
+      $ref: "./endpoints/cms/item-types.yaml#/getCmsItemTypes"
+    post:
+      $ref: "./endpoints/cms/item-types.yaml#/createCmsItemType"
+  /cms/item-types/{id}:
+    patch:
+      $ref: "./endpoints/cms/item-types.yaml#/updateCmsItemType"

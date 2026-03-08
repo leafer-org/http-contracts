@@ -1,0 +1,142 @@
+getCmsItemTypes:
+  operationId: getCmsItemTypes
+  tags:
+    - cms-item-types
+  summary: Список типов товаров (CMS)
+  description: Возвращает все типы товаров.
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: Список типов товаров
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../shared/cms.yaml#/ItemTypeListItem
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+createCmsItemType:
+  operationId: createCmsItemType
+  tags:
+    - cms-item-types
+  summary: Создание типа товара
+  description: Создаёт новый тип товара с указанными виджетами.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - id
+            - name
+            - availableWidgetTypes
+            - requiredWidgetTypes
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+              minLength: 1
+            availableWidgetTypes:
+              type: array
+              items:
+                $ref: ../../shared/cms.yaml#/WidgetType
+            requiredWidgetTypes:
+              type: array
+              items:
+                $ref: ../../shared/cms.yaml#/WidgetType
+  responses:
+    "201":
+      description: Тип товара создан
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/cms.yaml#/ItemTypeDetail
+    "400":
+      description: Ошибка валидации или доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+updateCmsItemType:
+  operationId: updateCmsItemType
+  tags:
+    - cms-item-types
+  summary: Обновление типа товара
+  description: Обновляет параметры типа товара.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - name
+            - availableWidgetTypes
+            - requiredWidgetTypes
+          properties:
+            name:
+              type: string
+              minLength: 1
+            availableWidgetTypes:
+              type: array
+              items:
+                $ref: ../../shared/cms.yaml#/WidgetType
+            requiredWidgetTypes:
+              type: array
+              items:
+                $ref: ../../shared/cms.yaml#/WidgetType
+  responses:
+    "200":
+      description: Тип товара обновлён
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/cms.yaml#/ItemTypeDetail
+    "400":
+      description: Ошибка валидации или доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Тип товара не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

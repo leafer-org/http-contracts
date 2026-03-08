@@ -95,6 +95,64 @@ getCategoryItems:
         minimum: 0
         maximum: 5
       description: Минимальный рейтинг
+    - name: attributeValues
+      in: query
+      required: false
+      schema:
+        type: string
+      description: JSON-массив фильтров по атрибутам [{"attributeId":"...","value":"..."}]
+    - name: lat
+      in: query
+      required: false
+      schema:
+        type: number
+      description: Широта для гео-фильтрации (требуется вместе с lng и radiusKm)
+    - name: lng
+      in: query
+      required: false
+      schema:
+        type: number
+      description: Долгота для гео-фильтрации (требуется вместе с lat и radiusKm)
+    - name: radiusKm
+      in: query
+      required: false
+      schema:
+        type: number
+      description: Радиус в км для гео-фильтрации (требуется вместе с lat и lng)
+    - name: dateFrom
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+      description: Начало диапазона дат для фильтрации событий
+    - name: dateTo
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+      description: Конец диапазона дат для фильтрации событий
+    - name: scheduleDayOfWeek
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 6
+      description: День недели для фильтрации по расписанию (0=вс, 1=пн, ..., 6=сб)
+    - name: scheduleTimeFrom
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Начало диапазона времени (HH:mm) для фильтрации по расписанию
+    - name: scheduleTimeTo
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Конец диапазона времени (HH:mm) для фильтрации по расписанию
   responses:
     "200":
       description: Список товаров с курсором

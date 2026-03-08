@@ -1,0 +1,149 @@
+WidgetType:
+  type: string
+  enum:
+    - base-info
+    - age-group
+    - location
+    - payment
+    - category
+    - owner
+    - item-review
+    - owner-review
+    - event-date-time
+    - schedule
+
+CategoryAttribute:
+  type: object
+  required:
+    - attributeId
+    - name
+    - required
+    - schema
+  properties:
+    attributeId:
+      type: string
+    name:
+      type: string
+    required:
+      type: boolean
+    schema:
+      $ref: ../shared/discovery.yaml#/AttributeSchema
+
+CmsCategoryListItem:
+  type: object
+  required:
+    - id
+    - name
+    - status
+    - childCount
+  properties:
+    id:
+      type: string
+    parentCategoryId:
+      type:
+        - string
+        - "null"
+    name:
+      type: string
+    status:
+      type: string
+      enum: [draft, published, unpublished]
+    childCount:
+      type: integer
+      minimum: 0
+
+CmsCategoryDetail:
+  type: object
+  required:
+    - id
+    - name
+    - allowedTypeIds
+    - attributes
+    - status
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      type: string
+    parentCategoryId:
+      type:
+        - string
+        - "null"
+    name:
+      type: string
+    iconId:
+      type:
+        - string
+        - "null"
+    allowedTypeIds:
+      type: array
+      items:
+        type: string
+    attributes:
+      type: array
+      items:
+        $ref: "#/CategoryAttribute"
+    status:
+      type: string
+      enum: [draft, published, unpublished]
+    publishedAt:
+      type:
+        - string
+        - "null"
+      format: date-time
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+ItemTypeListItem:
+  type: object
+  required:
+    - id
+    - name
+    - availableWidgetTypes
+    - requiredWidgetTypes
+  properties:
+    id:
+      type: string
+    name:
+      type: string
+    availableWidgetTypes:
+      type: array
+      items:
+        $ref: "#/WidgetType"
+    requiredWidgetTypes:
+      type: array
+      items:
+        $ref: "#/WidgetType"
+
+ItemTypeDetail:
+  type: object
+  required:
+    - id
+    - name
+    - availableWidgetTypes
+    - requiredWidgetTypes
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      type: string
+    name:
+      type: string
+    availableWidgetTypes:
+      type: array
+      items:
+        $ref: "#/WidgetType"
+    requiredWidgetTypes:
+      type: array
+      items:
+        $ref: "#/WidgetType"
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
