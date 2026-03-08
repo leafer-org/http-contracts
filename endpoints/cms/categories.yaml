@@ -113,6 +113,12 @@ createCmsCategory:
         application/json:
           schema:
             $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Родительская категория не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
 
 updateCmsCategory:
   operationId: updateCmsCategory
@@ -236,6 +242,12 @@ unpublishCmsCategory:
         application/json:
           schema:
             type: object
+    "400":
+      description: Категория не опубликована
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "403":
       description: Нет доступа
       content:
@@ -338,6 +350,12 @@ removeCmsCategoryAttribute:
         application/json:
           schema:
             type: object
+    "400":
+      description: Атрибут не назначен категории
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "403":
       description: Нет доступа
       content:

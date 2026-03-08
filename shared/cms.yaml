@@ -35,7 +35,6 @@ CmsCategoryListItem:
     - id
     - name
     - status
-    - childCount
   properties:
     id:
       type: string
@@ -48,9 +47,6 @@ CmsCategoryListItem:
     status:
       type: string
       enum: [draft, published, unpublished]
-    childCount:
-      type: integer
-      minimum: 0
 
 CmsCategoryDetail:
   type: object
