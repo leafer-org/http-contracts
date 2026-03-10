@@ -146,3 +146,63 @@ paths:
   /cms/item-types/{id}:
     patch:
       $ref: "./endpoints/cms/item-types.yaml#/updateCmsItemType"
+
+  # ── Organization: CRUD ────────────────────────────────
+  /organizations:
+    post:
+      $ref: "./endpoints/organization/organizations.yaml#/createOrganization"
+  /organizations/{id}:
+    get:
+      $ref: "./endpoints/organization/organizations.yaml#/getOrganization"
+    patch:
+      $ref: "./endpoints/organization/organizations.yaml#/updateInfoDraft"
+  /organizations/{id}/submit-for-moderation:
+    post:
+      $ref: "./endpoints/organization/organizations.yaml#/submitInfoForModeration"
+
+  # ── Organization: Employees ───────────────────────────
+  /organizations/{id}/employees:
+    get:
+      $ref: "./endpoints/organization/employees.yaml#/getEmployees"
+    post:
+      $ref: "./endpoints/organization/employees.yaml#/inviteEmployee"
+  /organizations/{id}/employees/{userId}:
+    delete:
+      $ref: "./endpoints/organization/employees.yaml#/removeEmployee"
+    patch:
+      $ref: "./endpoints/organization/employees.yaml#/changeEmployeeRole"
+  /organizations/{id}/transfer-ownership:
+    post:
+      $ref: "./endpoints/organization/employees.yaml#/transferOwnership"
+
+  # ── Organization: Roles ───────────────────────────────
+  /organizations/{id}/roles:
+    get:
+      $ref: "./endpoints/organization/roles.yaml#/getRoles"
+    post:
+      $ref: "./endpoints/organization/roles.yaml#/createEmployeeRole"
+  /organizations/{id}/roles/{roleId}:
+    patch:
+      $ref: "./endpoints/organization/roles.yaml#/updateEmployeeRole"
+    delete:
+      $ref: "./endpoints/organization/roles.yaml#/deleteEmployeeRole"
+
+  # ── Organization: Items ───────────────────────────────
+  /organizations/{orgId}/items:
+    post:
+      $ref: "./endpoints/organization/items.yaml#/createItem"
+    get:
+      $ref: "./endpoints/organization/items.yaml#/getItems"
+  /organizations/{orgId}/items/{itemId}:
+    get:
+      $ref: "./endpoints/organization/items.yaml#/getItemDetail"
+    patch:
+      $ref: "./endpoints/organization/items.yaml#/updateItemDraft"
+    delete:
+      $ref: "./endpoints/organization/items.yaml#/deleteItemDraft"
+  /organizations/{orgId}/items/{itemId}/submit-for-moderation:
+    post:
+      $ref: "./endpoints/organization/items.yaml#/submitItemForModeration"
+  /organizations/{orgId}/items/{itemId}/unpublish:
+    post:
+      $ref: "./endpoints/organization/items.yaml#/unpublishItem"

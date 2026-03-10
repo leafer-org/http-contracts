@@ -24,6 +24,18 @@ getFeed:
       schema:
         type: string
       description: Курсор для пагинации
+    - name: lat
+      in: query
+      required: false
+      schema:
+        type: number
+      description: Широта пользователя (optional, для geo-рекомендаций)
+    - name: lng
+      in: query
+      required: false
+      schema:
+        type: number
+      description: Долгота пользователя (optional, для geo-рекомендаций)
     - name: limit
       in: query
       required: false

@@ -1,0 +1,250 @@
+getEmployees:
+  operationId: getOrganizationEmployees
+  tags:
+    - organization-employees
+  summary: Список сотрудников
+  description: Возвращает список сотрудников организации с их ролями.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: Список сотрудников
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../shared/organization.yaml#/Employee
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+inviteEmployee:
+  operationId: inviteEmployee
+  tags:
+    - organization-employees
+  summary: Приглашение сотрудника
+  description: Приглашает пользователя в организацию по номеру телефона.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - phone
+            - roleId
+          properties:
+            phone:
+              type: string
+              description: Номер телефона приглашаемого пользователя
+            roleId:
+              type: string
+              description: ID роли для нового сотрудника
+  responses:
+    "201":
+      description: Сотрудник приглашён
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/organization.yaml#/Employee
+    "400":
+      description: Ошибка валидации или доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется manage_employees)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация или пользователь не найдены
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+removeEmployee:
+  operationId: removeEmployee
+  tags:
+    - organization-employees
+  summary: Удаление сотрудника
+  description: Удаляет сотрудника из организации. Владельца удалить нельзя.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Сотрудник удалён
+    "400":
+      description: Доменная ошибка (нельзя удалить владельца)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется manage_employees)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация или сотрудник не найдены
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+changeEmployeeRole:
+  operationId: changeEmployeeRole
+  tags:
+    - organization-employees
+  summary: Изменение роли сотрудника
+  description: Назначает сотруднику другую роль.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - roleId
+          properties:
+            roleId:
+              type: string
+  responses:
+    "200":
+      description: Роль изменена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/organization.yaml#/Employee
+    "400":
+      description: Ошибка валидации или доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется manage_employees)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация, сотрудник или роль не найдены
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+transferOwnership:
+  operationId: transferOwnership
+  tags:
+    - organization-employees
+  summary: Передача владения
+  description: Передаёт владение организацией другому сотруднику. Новый владелец получает роль ADMIN.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - userId
+          properties:
+            userId:
+              type: string
+              description: ID сотрудника, которому передаётся владение
+  responses:
+    "204":
+      description: Владение передано
+    "400":
+      description: Доменная ошибка (пользователь не является сотрудником)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (только владелец)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

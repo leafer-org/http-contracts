@@ -1,0 +1,213 @@
+getRoles:
+  operationId: getOrganizationRoles
+  tags:
+    - organization-roles
+  summary: Список ролей
+  description: Возвращает список ролей организации с пермишенами.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: Список ролей
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../shared/organization.yaml#/EmployeeRole
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+createEmployeeRole:
+  operationId: createEmployeeRole
+  tags:
+    - organization-roles
+  summary: Создание роли
+  description: Создаёт новую роль в организации с указанными пермишенами.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - name
+            - permissions
+          properties:
+            name:
+              type: string
+              minLength: 1
+            permissions:
+              type: array
+              items:
+                $ref: ../../shared/organization.yaml#/OrganizationPermission
+  responses:
+    "201":
+      description: Роль создана
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/organization.yaml#/EmployeeRole
+    "400":
+      description: Ошибка валидации или доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется manage_roles)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+updateEmployeeRole:
+  operationId: updateEmployeeRole
+  tags:
+    - organization-roles
+  summary: Обновление роли
+  description: Обновляет имя и пермишены роли.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - name
+            - permissions
+          properties:
+            name:
+              type: string
+              minLength: 1
+            permissions:
+              type: array
+              items:
+                $ref: ../../shared/organization.yaml#/OrganizationPermission
+  responses:
+    "200":
+      description: Роль обновлена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/organization.yaml#/EmployeeRole
+    "400":
+      description: Ошибка валидации или доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется manage_roles)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация или роль не найдены
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+deleteEmployeeRole:
+  operationId: deleteEmployeeRole
+  tags:
+    - organization-roles
+  summary: Удаление роли
+  description: Удаляет роль. Все сотрудники с этой ролью переназначаются на replacementRoleId. Роль ADMIN удалить нельзя.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: replacementRoleId
+      in: query
+      required: true
+      schema:
+        type: string
+      description: ID роли, на которую переназначить сотрудников
+  responses:
+    "204":
+      description: Роль удалена
+    "400":
+      description: Доменная ошибка (нельзя удалить ADMIN роль)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется manage_roles)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация или роль не найдены
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

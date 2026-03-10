@@ -1,0 +1,293 @@
+OrganizationPermission:
+  type: string
+  enum:
+    - manage_employees
+    - manage_roles
+    - edit_organization
+    - publish_organization
+    - edit_items
+    - publish_items
+    - unpublish_items
+    - manage_subscription
+
+SubscriptionPlanId:
+  type: string
+  enum:
+    - free
+    - individual
+    - team
+
+InfoDraftStatus:
+  type: string
+  enum:
+    - draft
+    - moderation-request
+    - rejected
+
+ItemDraftStatus:
+  type: string
+  enum:
+    - draft
+    - moderation-request
+    - rejected
+
+# ── Organization ──────────────────────────────────────
+
+OrganizationDetail:
+  type: object
+  required:
+    - id
+    - infoDraft
+    - employees
+    - roles
+    - subscription
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      type: string
+    infoDraft:
+      $ref: "#/InfoDraft"
+    infoPublication:
+      type:
+        - object
+        - "null"
+      required:
+        - name
+        - description
+        - publishedAt
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        avatarId:
+          type:
+            - string
+            - "null"
+        publishedAt:
+          type: string
+          format: date-time
+    employees:
+      type: array
+      items:
+        $ref: "#/Employee"
+    roles:
+      type: array
+      items:
+        $ref: "#/EmployeeRole"
+    subscription:
+      $ref: "#/Subscription"
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+InfoDraft:
+  type: object
+  required:
+    - name
+    - description
+    - status
+  properties:
+    name:
+      type: string
+    description:
+      type: string
+    avatarId:
+      type:
+        - string
+        - "null"
+    status:
+      $ref: "#/InfoDraftStatus"
+
+# ── Employees ──────────────────────────────────────
+
+Employee:
+  type: object
+  required:
+    - userId
+    - roleId
+    - isOwner
+    - joinedAt
+  properties:
+    userId:
+      type: string
+    roleId:
+      type: string
+    isOwner:
+      type: boolean
+    joinedAt:
+      type: string
+      format: date-time
+
+# ── Roles ──────────────────────────────────────────
+
+EmployeeRole:
+  type: object
+  required:
+    - id
+    - name
+    - permissions
+  properties:
+    id:
+      type: string
+    name:
+      type: string
+    permissions:
+      type: array
+      items:
+        $ref: "#/OrganizationPermission"
+
+# ── Subscription ───────────────────────────────────
+
+Subscription:
+  type: object
+  required:
+    - planId
+    - maxEmployees
+    - maxPublishedItems
+    - availableWidgetTypes
+  properties:
+    planId:
+      $ref: "#/SubscriptionPlanId"
+    maxEmployees:
+      type: integer
+    maxPublishedItems:
+      type: integer
+    availableWidgetTypes:
+      type: array
+      items:
+        $ref: ../shared/cms.yaml#/WidgetType
+
+# ── Items ──────────────────────────────────────────
+
+ItemWidget:
+  type: object
+  required:
+    - type
+    - data
+  properties:
+    type:
+      $ref: ../shared/cms.yaml#/WidgetType
+    data:
+      type: object
+      additionalProperties: true
+
+ItemDraft:
+  type: object
+  required:
+    - widgets
+    - status
+    - updatedAt
+  properties:
+    widgets:
+      type: array
+      items:
+        $ref: "#/ItemWidget"
+    status:
+      $ref: "#/ItemDraftStatus"
+    updatedAt:
+      type: string
+      format: date-time
+
+ItemPublication:
+  type: object
+  required:
+    - widgets
+    - publishedAt
+  properties:
+    widgets:
+      type: array
+      items:
+        $ref: "#/ItemWidget"
+    publishedAt:
+      type: string
+      format: date-time
+
+ItemListItem:
+  type: object
+  required:
+    - itemId
+    - organizationId
+    - typeId
+    - createdAt
+    - updatedAt
+  properties:
+    itemId:
+      type: string
+    organizationId:
+      type: string
+    typeId:
+      type: string
+    hasDraft:
+      type: boolean
+    draftStatus:
+      type:
+        - string
+        - "null"
+    hasPublication:
+      type: boolean
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+ItemDetail:
+  type: object
+  required:
+    - itemId
+    - organizationId
+    - typeId
+    - createdAt
+    - updatedAt
+  properties:
+    itemId:
+      type: string
+    organizationId:
+      type: string
+    typeId:
+      type: string
+    draft:
+      type:
+        - object
+        - "null"
+      required:
+        - widgets
+        - status
+        - updatedAt
+      properties:
+        widgets:
+          type: array
+          items:
+            $ref: "#/ItemWidget"
+        status:
+          $ref: "#/ItemDraftStatus"
+        updatedAt:
+          type: string
+          format: date-time
+    publication:
+      type:
+        - object
+        - "null"
+      required:
+        - widgets
+        - publishedAt
+      properties:
+        widgets:
+          type: array
+          items:
+            $ref: "#/ItemWidget"
+        publishedAt:
+          type: string
+          format: date-time
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
