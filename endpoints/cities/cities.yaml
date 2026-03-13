@@ -1,0 +1,41 @@
+getCities:
+  operationId: getCities
+  tags:
+    - cities
+  summary: Список городов
+  description: Возвращает список доступных городов.
+  security: []
+  responses:
+    "200":
+      description: Список городов
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+                - id
+                - name
+                - lat
+                - lng
+              additionalProperties: false
+              properties:
+                id:
+                  type: string
+                  minLength: 1
+                name:
+                  type: string
+                  minLength: 1
+                lat:
+                  type: number
+                  description: Широта
+                lng:
+                  type: number
+                  description: Долгота
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

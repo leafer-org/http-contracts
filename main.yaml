@@ -72,6 +72,11 @@ paths:
     get:
       $ref: "./endpoints/idp/admin-users-search.yaml#/searchAdminUsers"
 
+  # ── Cities ────────────────────────────────────────────
+  /cities:
+    get:
+      $ref: "./endpoints/cities/cities.yaml#/getCities"
+
   # ── Media ──────────────────────────────────────────────
   /media/upload-request:
     post:
