@@ -13,6 +13,7 @@ completeProfile:
           type: object
           required:
             - registrationSessionId
+            - cityId
           additionalProperties: false
           properties:
             registrationSessionId:
@@ -25,6 +26,16 @@ completeProfile:
               maxLength: 100
             avatarMedia:
               $ref: ../../shared/media.yaml#/LinkMediaData
+            cityId:
+              type: string
+              minLength: 1
+              description: Идентификатор города
+            lat:
+              type: number
+              description: Широта
+            lng:
+              type: number
+              description: Долгота
   responses:
     "200":
       description: Профиль создан, токены выданы

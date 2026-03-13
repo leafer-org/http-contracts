@@ -177,3 +177,79 @@ submitInfoForModeration:
         application/json:
           schema:
             $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+approveInfoModeration:
+  operationId: approveInfoModeration
+  tags:
+    - organizations
+  summary: Одобрить модерацию профиля
+  description: Одобряет модерацию профиля организации. Требуется глобальный permission ORGANIZATION.MODERATE.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Модерация одобрена
+    "400":
+      description: Доменная ошибка (профиль не на модерации)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется ORGANIZATION.MODERATE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+rejectInfoModeration:
+  operationId: rejectInfoModeration
+  tags:
+    - organizations
+  summary: Отклонить модерацию профиля
+  description: Отклоняет модерацию профиля организации. Требуется глобальный permission ORGANIZATION.MODERATE.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Модерация отклонена
+    "400":
+      description: Доменная ошибка (профиль не на модерации)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется ORGANIZATION.MODERATE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

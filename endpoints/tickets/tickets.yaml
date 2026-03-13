@@ -1,0 +1,652 @@
+getAdminTickets:
+  operationId: getAdminTickets
+  tags:
+    - tickets
+  summary: Список тикетов
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: boardId
+      in: query
+      schema:
+        type: string
+      description: Фильтр по доске
+    - name: status
+      in: query
+      schema:
+        type: string
+        enum:
+          - open
+          - in-progress
+          - done
+      description: Фильтр по статусу
+    - name: assigneeId
+      in: query
+      schema:
+        type: string
+      description: Фильтр по исполнителю
+    - name: from
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+      description: Смещение для пагинации
+    - name: size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Размер страницы
+  responses:
+    "200":
+      description: Список тикетов
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - tickets
+              - total
+            properties:
+              tickets:
+                type: array
+                items:
+                  $ref: ../../shared/ticket.yaml#/TicketListItem
+              total:
+                type: integer
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+getAdminMyTickets:
+  operationId: getAdminMyTickets
+  tags:
+    - tickets
+  summary: Мои тикеты
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: from
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+      description: Смещение для пагинации
+    - name: size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Размер страницы
+  responses:
+    "200":
+      description: Мои тикеты
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - tickets
+              - total
+            properties:
+              tickets:
+                type: array
+                items:
+                  $ref: ../../shared/ticket.yaml#/TicketListItem
+              total:
+                type: integer
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+getAdminTicketDetail:
+  operationId: getAdminTicketDetail
+  tags:
+    - tickets
+  summary: Детали тикета
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: ticketId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: Детали тикета
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/ticket.yaml#/TicketDetail
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Тикет не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+createAdminTicket:
+  operationId: createAdminTicket
+  tags:
+    - tickets
+  summary: Ручное создание тикета
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - boardId
+            - message
+          properties:
+            boardId:
+              type: string
+            message:
+              type: string
+              minLength: 1
+            data:
+              $ref: ../../shared/ticket.yaml#/TicketData
+  responses:
+    "201":
+      description: Тикет создан
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - ticketId
+              - boardId
+              - message
+              - status
+              - createdAt
+            properties:
+              ticketId:
+                type: string
+              boardId:
+                type: string
+              message:
+                type: string
+              status:
+                type: string
+                enum:
+                  - open
+                  - in-progress
+                  - done
+              createdAt:
+                type: string
+                format: date-time
+    "400":
+      description: Ошибка валидации / Ручное создание запрещено
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа / Не участник доски
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Доска не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+assignAdminTicket:
+  operationId: assignAdminTicket
+  tags:
+    - tickets
+  summary: Назначить тикет
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: ticketId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - assigneeId
+          properties:
+            assigneeId:
+              type: string
+  responses:
+    "200":
+      description: Тикет назначен
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - ticketId
+              - status
+              - assigneeId
+            properties:
+              ticketId:
+                type: string
+              status:
+                type: string
+                enum:
+                  - open
+                  - in-progress
+                  - done
+              assigneeId:
+                type: string
+    "400":
+      description: Тикет не в статусе open
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа / Не участник доски
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Тикет не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+reassignAdminTicket:
+  operationId: reassignAdminTicket
+  tags:
+    - tickets
+  summary: Переназначить тикет
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: ticketId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - assigneeId
+          properties:
+            assigneeId:
+              type: string
+  responses:
+    "200":
+      description: Тикет переназначен
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - ticketId
+              - status
+              - assigneeId
+            properties:
+              ticketId:
+                type: string
+              status:
+                type: string
+                enum:
+                  - open
+                  - in-progress
+                  - done
+              assigneeId:
+                type: string
+    "400":
+      description: Тикет не в статусе in-progress
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа / Не участник доски
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Тикет не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+unassignAdminTicket:
+  operationId: unassignAdminTicket
+  tags:
+    - tickets
+  summary: Отказаться от тикета
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: ticketId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Тикет снят с исполнителя
+    "400":
+      description: Тикет не в статусе in-progress
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Тикет не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+moveAdminTicket:
+  operationId: moveAdminTicket
+  tags:
+    - tickets
+  summary: Перенаправить тикет на другую доску
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: ticketId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - toBoardId
+            - comment
+          properties:
+            toBoardId:
+              type: string
+            comment:
+              type: string
+              minLength: 1
+  responses:
+    "200":
+      description: Тикет перенаправлен
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - ticketId
+              - boardId
+              - status
+            properties:
+              ticketId:
+                type: string
+              boardId:
+                type: string
+              status:
+                type: string
+                enum:
+                  - open
+                  - in-progress
+                  - done
+    "400":
+      description: Перенаправление запрещено / Ошибка валидации
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Тикет не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+markAdminTicketDone:
+  operationId: markAdminTicketDone
+  tags:
+    - tickets
+  summary: Отметить тикет как обработанный
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: ticketId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Тикет обработан
+    "400":
+      description: Тикет не в статусе in-progress
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Тикет не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+reopenAdminTicket:
+  operationId: reopenAdminTicket
+  tags:
+    - tickets
+  summary: Переоткрыть тикет
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: ticketId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Тикет переоткрыт
+    "400":
+      description: Тикет не в статусе done
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Тикет не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+addAdminTicketComment:
+  operationId: addAdminTicketComment
+  tags:
+    - tickets
+  summary: Добавить комментарий к тикету
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: ticketId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - text
+          properties:
+            text:
+              type: string
+              minLength: 1
+  responses:
+    "200":
+      description: Комментарий добавлен
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - ticketId
+              - status
+            properties:
+              ticketId:
+                type: string
+              status:
+                type: string
+                enum:
+                  - open
+                  - in-progress
+                  - done
+    "400":
+      description: Ошибка валидации
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Тикет не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

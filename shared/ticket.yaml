@@ -1,0 +1,336 @@
+TicketListItem:
+  type: object
+  required:
+    - ticketId
+    - boardId
+    - message
+    - status
+    - createdAt
+    - updatedAt
+  properties:
+    ticketId:
+      type: string
+    boardId:
+      type: string
+    message:
+      type: string
+    triggerId:
+      type:
+        - string
+        - "null"
+    status:
+      type: string
+      enum:
+        - open
+        - in-progress
+        - done
+    assigneeId:
+      type:
+        - string
+        - "null"
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+TicketDetail:
+  type: object
+  required:
+    - ticketId
+    - boardId
+    - message
+    - data
+    - status
+    - history
+    - createdAt
+    - updatedAt
+  properties:
+    ticketId:
+      type: string
+    boardId:
+      type: string
+    message:
+      type: string
+    triggerId:
+      type:
+        - string
+        - "null"
+    data:
+      $ref: "#/TicketData"
+    status:
+      type: string
+      enum:
+        - open
+        - in-progress
+        - done
+    assigneeId:
+      type:
+        - string
+        - "null"
+    history:
+      type: array
+      items:
+        $ref: "#/TicketHistoryEntry"
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+TicketData:
+  type: object
+  properties:
+    item:
+      type:
+        - object
+        - "null"
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        typeId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type:
+            - string
+            - "null"
+        categoryIds:
+          type: array
+          items:
+            type: string
+    organization:
+      type:
+        - object
+        - "null"
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        avatarUrl:
+          type:
+            - string
+            - "null"
+
+TicketHistoryEntry:
+  type: object
+  required:
+    - action
+    - actorId
+    - data
+    - timestamp
+  properties:
+    action:
+      type: string
+      enum:
+        - created
+        - assigned
+        - reassigned
+        - unassigned
+        - moved
+        - done
+        - reopened
+        - commented
+    actorId:
+      type: string
+    data:
+      type: object
+      additionalProperties: true
+    timestamp:
+      type: string
+      format: date-time
+
+BoardListItem:
+  type: object
+  required:
+    - boardId
+    - name
+    - scope
+    - manualCreation
+    - subscriptionCount
+    - memberCount
+    - automationCount
+    - createdAt
+  properties:
+    boardId:
+      type: string
+    name:
+      type: string
+    description:
+      type:
+        - string
+        - "null"
+    scope:
+      type: string
+      enum:
+        - platform
+        - organization
+    manualCreation:
+      type: boolean
+    subscriptionCount:
+      type: integer
+    memberCount:
+      type: integer
+    automationCount:
+      type: integer
+    createdAt:
+      type: string
+      format: date-time
+
+BoardDetail:
+  type: object
+  required:
+    - boardId
+    - name
+    - scope
+    - manualCreation
+    - subscriptions
+    - allowedTransferBoardIds
+    - memberIds
+    - automations
+    - createdAt
+    - updatedAt
+  properties:
+    boardId:
+      type: string
+    name:
+      type: string
+    description:
+      type:
+        - string
+        - "null"
+    scope:
+      type: string
+      enum:
+        - platform
+        - organization
+    organizationId:
+      type:
+        - string
+        - "null"
+    manualCreation:
+      type: boolean
+    subscriptions:
+      type: array
+      items:
+        $ref: "#/BoardSubscription"
+    allowedTransferBoardIds:
+      type: array
+      items:
+        type: string
+    memberIds:
+      type: array
+      items:
+        type: string
+    automations:
+      type: array
+      items:
+        $ref: "#/BoardAutomation"
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+BoardSubscription:
+  type: object
+  required:
+    - id
+    - triggerId
+    - filters
+  properties:
+    id:
+      type: string
+    triggerId:
+      type: string
+    filters:
+      type: array
+      items:
+        $ref: "#/SubscriptionFilter"
+
+BoardAutomation:
+  type: object
+  required:
+    - id
+    - enabled
+    - agentId
+    - systemPrompt
+    - onUncertain
+  properties:
+    id:
+      type: string
+    enabled:
+      type: boolean
+    agentId:
+      type: string
+    systemPrompt:
+      type: string
+    onUncertain:
+      type: object
+      required:
+        - moveToBoardId
+      properties:
+        moveToBoardId:
+          type:
+            - string
+            - "null"
+
+SubscriptionFilter:
+  oneOf:
+    - type: object
+      required:
+        - type
+        - rule
+      properties:
+        type:
+          type: string
+          enum:
+            - json-logic
+        rule:
+          type: object
+          additionalProperties: true
+    - type: object
+      required:
+        - type
+        - filterId
+        - params
+      properties:
+        type:
+          type: string
+          enum:
+            - programmatic
+        filterId:
+          type: string
+        params:
+          type: object
+          additionalProperties: true
+  discriminator:
+    propertyName: type
+
+TriggerInfo:
+  type: object
+  required:
+    - triggerId
+    - name
+    - scope
+  properties:
+    triggerId:
+      type: string
+    name:
+      type: string
+    scope:
+      type: string
+      enum:
+        - platform
+        - organization

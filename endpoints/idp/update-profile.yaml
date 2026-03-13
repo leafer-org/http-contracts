@@ -22,6 +22,16 @@ updateProfile:
               minLength: 2
               maxLength: 100
               description: Полное имя пользователя
+            cityId:
+              type: string
+              minLength: 1
+              description: Идентификатор города
+            lat:
+              type: number
+              description: Широта
+            lng:
+              type: number
+              description: Долгота
   responses:
     "200":
       description: Обновлённый профиль

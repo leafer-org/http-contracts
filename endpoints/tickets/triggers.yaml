@@ -1,0 +1,38 @@
+getAdminTicketTriggers:
+  operationId: getAdminTicketTriggers
+  tags:
+    - tickets
+    - boards
+  summary: Справочник триггеров
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: scope
+      in: query
+      schema:
+        type: string
+        enum:
+          - platform
+          - organization
+      description: Фильтр по scope
+  responses:
+    "200":
+      description: Список триггеров
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../shared/ticket.yaml#/TriggerInfo
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

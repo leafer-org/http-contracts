@@ -107,11 +107,63 @@ paths:
   /liked-items:
     get:
       $ref: "./endpoints/discovery/liked-items.yaml#/getLikedItems"
+  /items/{itemId}:
+    get:
+      $ref: "./endpoints/discovery/item-detail.yaml#/getDiscoveryItemDetail"
   /items/{itemId}/like:
     post:
       $ref: "./endpoints/discovery/like-item.yaml#/likeItem"
     delete:
       $ref: "./endpoints/discovery/like-item.yaml#/unlikeItem"
+
+  # ── Interactions ─────────────────────────────────────────
+  /interactions/views:
+    post:
+      $ref: "./endpoints/interactions/interactions.yaml#/recordViews"
+  /interactions/click:
+    post:
+      $ref: "./endpoints/interactions/interactions.yaml#/recordClick"
+  /interactions/show-contacts:
+    post:
+      $ref: "./endpoints/interactions/interactions.yaml#/recordShowContacts"
+
+  # ── Reviews ──────────────────────────────────────────────
+  /reviews:
+    get:
+      $ref: "./endpoints/reviews/reviews.yaml#/getReviewsByTarget"
+    post:
+      $ref: "./endpoints/reviews/reviews.yaml#/createReview"
+  /reviews/my:
+    get:
+      $ref: "./endpoints/reviews/reviews.yaml#/getMyReviews"
+  /reviews/by-ids:
+    post:
+      $ref: "./endpoints/reviews/reviews.yaml#/getReviewsByIds"
+  /reviews/organization/{orgId}:
+    get:
+      $ref: "./endpoints/reviews/reviews.yaml#/getOrganizationReviews"
+  /reviews/{reviewId}:
+    get:
+      $ref: "./endpoints/reviews/reviews.yaml#/getReviewById"
+    patch:
+      $ref: "./endpoints/reviews/reviews.yaml#/editReview"
+    delete:
+      $ref: "./endpoints/reviews/reviews.yaml#/deleteReview"
+  /reviews/{reviewId}/approve:
+    post:
+      $ref: "./endpoints/reviews/reviews.yaml#/approveReview"
+  /reviews/{reviewId}/reject:
+    post:
+      $ref: "./endpoints/reviews/reviews.yaml#/rejectReview"
+  /reviews/{reviewId}/reply:
+    post:
+      $ref: "./endpoints/reviews/reviews.yaml#/replyToReview"
+  /reviews/{reviewId}/dispute:
+    post:
+      $ref: "./endpoints/reviews/reviews.yaml#/disputeReview"
+  /reviews/{reviewId}/resolve-dispute:
+    post:
+      $ref: "./endpoints/reviews/reviews.yaml#/resolveDispute"
 
   # ── CMS: Categories ──────────────────────────────────────
   /cms/categories:
@@ -159,6 +211,12 @@ paths:
   /organizations/{id}/submit-for-moderation:
     post:
       $ref: "./endpoints/organization/organizations.yaml#/submitInfoForModeration"
+  /organizations/{id}/approve-moderation:
+    post:
+      $ref: "./endpoints/organization/organizations.yaml#/approveInfoModeration"
+  /organizations/{id}/reject-moderation:
+    post:
+      $ref: "./endpoints/organization/organizations.yaml#/rejectInfoModeration"
 
   # ── Organization: Employees ───────────────────────────
   /organizations/{id}/employees:
@@ -203,6 +261,81 @@ paths:
   /organizations/{orgId}/items/{itemId}/submit-for-moderation:
     post:
       $ref: "./endpoints/organization/items.yaml#/submitItemForModeration"
+  /organizations/{orgId}/items/{itemId}/approve-moderation:
+    post:
+      $ref: "./endpoints/organization/items.yaml#/approveItemModeration"
+  /organizations/{orgId}/items/{itemId}/reject-moderation:
+    post:
+      $ref: "./endpoints/organization/items.yaml#/rejectItemModeration"
   /organizations/{orgId}/items/{itemId}/unpublish:
     post:
       $ref: "./endpoints/organization/items.yaml#/unpublishItem"
+
+  # ── Tickets: Admin Boards ──────────────────────────────
+  /admin/boards:
+    get:
+      $ref: "./endpoints/tickets/boards.yaml#/getAdminBoards"
+    post:
+      $ref: "./endpoints/tickets/boards.yaml#/createAdminBoard"
+  /admin/boards/{boardId}:
+    patch:
+      $ref: "./endpoints/tickets/boards.yaml#/updateAdminBoard"
+    delete:
+      $ref: "./endpoints/tickets/boards.yaml#/deleteAdminBoard"
+  /admin/boards/{boardId}/subscriptions:
+    post:
+      $ref: "./endpoints/tickets/boards.yaml#/addAdminBoardSubscription"
+  /admin/boards/{boardId}/subscriptions/{subId}:
+    delete:
+      $ref: "./endpoints/tickets/boards.yaml#/removeAdminBoardSubscription"
+  /admin/boards/{boardId}/members:
+    post:
+      $ref: "./endpoints/tickets/boards.yaml#/addAdminBoardMember"
+  /admin/boards/{boardId}/members/{userId}:
+    delete:
+      $ref: "./endpoints/tickets/boards.yaml#/removeAdminBoardMember"
+  /admin/boards/{boardId}/automation:
+    put:
+      $ref: "./endpoints/tickets/boards.yaml#/addAdminBoardAutomation"
+  /admin/boards/{boardId}/automation/{automationId}:
+    delete:
+      $ref: "./endpoints/tickets/boards.yaml#/removeAdminBoardAutomation"
+
+  # ── Tickets: Admin Tickets ─────────────────────────────
+  /admin/tickets:
+    get:
+      $ref: "./endpoints/tickets/tickets.yaml#/getAdminTickets"
+    post:
+      $ref: "./endpoints/tickets/tickets.yaml#/createAdminTicket"
+  /admin/tickets/my:
+    get:
+      $ref: "./endpoints/tickets/tickets.yaml#/getAdminMyTickets"
+  /admin/tickets/{ticketId}:
+    get:
+      $ref: "./endpoints/tickets/tickets.yaml#/getAdminTicketDetail"
+  /admin/tickets/{ticketId}/assign:
+    post:
+      $ref: "./endpoints/tickets/tickets.yaml#/assignAdminTicket"
+  /admin/tickets/{ticketId}/reassign:
+    post:
+      $ref: "./endpoints/tickets/tickets.yaml#/reassignAdminTicket"
+  /admin/tickets/{ticketId}/unassign:
+    post:
+      $ref: "./endpoints/tickets/tickets.yaml#/unassignAdminTicket"
+  /admin/tickets/{ticketId}/move:
+    post:
+      $ref: "./endpoints/tickets/tickets.yaml#/moveAdminTicket"
+  /admin/tickets/{ticketId}/done:
+    post:
+      $ref: "./endpoints/tickets/tickets.yaml#/markAdminTicketDone"
+  /admin/tickets/{ticketId}/reopen:
+    post:
+      $ref: "./endpoints/tickets/tickets.yaml#/reopenAdminTicket"
+  /admin/tickets/{ticketId}/comments:
+    post:
+      $ref: "./endpoints/tickets/tickets.yaml#/addAdminTicketComment"
+
+  # ── Tickets: Admin Triggers ────────────────────────────
+  /admin/boards/triggers:
+    get:
+      $ref: "./endpoints/tickets/triggers.yaml#/getAdminTicketTriggers"

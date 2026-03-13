@@ -1,0 +1,606 @@
+# ── Создание / редактирование / удаление ─────────────────
+
+createReview:
+  operationId: createReview
+  tags:
+    - reviews
+  summary: Создать отзыв
+  description: Создаёт отзыв на item или организацию. Если рейтинг >= 4, публикуется сразу; иначе отправляется на модерацию.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - targetType
+            - targetId
+            - organizationId
+            - rating
+          properties:
+            targetType:
+              type: string
+              enum:
+                - item
+                - organization
+            targetId:
+              type: string
+            organizationId:
+              type: string
+              description: ID организации-владельца target
+            rating:
+              type: number
+              minimum: 0.5
+              maximum: 5
+              description: "Рейтинг с шагом 0.5 (0.5, 1, 1.5, ..., 5)"
+            text:
+              type: string
+              description: Текст отзыва (необязателен)
+  responses:
+    "201":
+      description: Отзыв создан
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/review.yaml#/Review
+    "400":
+      description: Ошибка валидации или доменная ошибка (дубль, невалидный рейтинг, отзыв на свой item)
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "409":
+      description: Отзыв уже существует для данного (user, target)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+editReview:
+  operationId: editReview
+  tags:
+    - reviews
+  summary: Редактировать отзыв
+  description: Редактирует отзыв в статусе pending. Если новый рейтинг >= 4, отзыв автоматически публикуется.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: reviewId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            rating:
+              type: number
+              minimum: 0.5
+              maximum: 5
+            text:
+              type:
+                - string
+                - "null"
+  responses:
+    "200":
+      description: Отзыв обновлён
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/review.yaml#/Review
+    "400":
+      description: Ошибка валидации или доменная ошибка (отзыв не в статусе pending)
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "404":
+      description: Отзыв не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+deleteReview:
+  operationId: deleteReview
+  tags:
+    - reviews
+  summary: Удалить отзыв
+  description: Удаляет опубликованный отзыв. Рейтинг пересчитывается.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: reviewId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Отзыв удалён
+    "400":
+      description: Доменная ошибка (отзыв не в статусе published)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "404":
+      description: Отзыв не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+# ── Ответ владельца ──────────────────────────────────────
+
+replyToReview:
+  operationId: replyToReview
+  tags:
+    - reviews
+  summary: Ответить на отзыв
+  description: Владелец организации отвечает на опубликованный отзыв. Один ответ на отзыв.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: reviewId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - text
+          properties:
+            text:
+              type: string
+              minLength: 1
+  responses:
+    "200":
+      description: Ответ добавлен
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/review.yaml#/Review
+    "400":
+      description: Доменная ошибка (отзыв не published или уже есть ответ)
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (не владелец организации)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Отзыв не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+# ── Оспаривание ─────────────────────────────────────────
+
+disputeReview:
+  operationId: disputeReview
+  tags:
+    - reviews
+  summary: Оспорить отзыв
+  description: Продавец оспаривает опубликованный отзыв. Отзыв скрывается из витрины, рейтинг пересчитывается. Оспорить можно только один раз.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: reviewId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - reason
+          properties:
+            reason:
+              type: string
+              minLength: 1
+  responses:
+    "200":
+      description: Отзыв оспорен
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/review.yaml#/Review
+    "400":
+      description: Доменная ошибка (не published, уже оспаривался)
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (не владелец организации)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Отзыв не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+# ── Модерация ────────────────────────────────────────────
+
+approveReview:
+  operationId: approveReview
+  tags:
+    - reviews-moderation
+  summary: Одобрить отзыв
+  description: Модератор одобряет отзыв в статусе pending. Отзыв публикуется, рейтинг пересчитывается.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: reviewId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Отзыв одобрен
+    "400":
+      description: Доменная ошибка (отзыв не в статусе pending)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется REVIEW.MODERATE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Отзыв не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+rejectReview:
+  operationId: rejectReview
+  tags:
+    - reviews-moderation
+  summary: Отклонить отзыв
+  description: Модератор отклоняет отзыв в статусе pending.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: reviewId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - reason
+          properties:
+            reason:
+              type: string
+              minLength: 1
+  responses:
+    "204":
+      description: Отзыв отклонён
+    "400":
+      description: Доменная ошибка (отзыв не в статусе pending)
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется REVIEW.MODERATE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Отзыв не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+resolveDispute:
+  operationId: resolveDispute
+  tags:
+    - reviews-moderation
+  summary: Разрешить спор по отзыву
+  description: "Модератор разрешает спор: uphold — восстановить отзыв, remove — удалить окончательно."
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: reviewId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - resolution
+          properties:
+            resolution:
+              type: string
+              enum:
+                - uphold
+                - remove
+  responses:
+    "204":
+      description: Спор разрешён
+    "400":
+      description: Доменная ошибка (отзыв не в статусе disputed)
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется REVIEW.MODERATE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Отзыв не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+# ── Чтение ───────────────────────────────────────────────
+
+getReviewsByTarget:
+  operationId: getReviewsByTarget
+  tags:
+    - reviews
+  summary: Список отзывов по сущности
+  description: Возвращает опубликованные отзывы по item или организации. Если пользователь авторизован, его pending-отзыв включается с флагами isMine и isPending.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: targetType
+      in: query
+      required: true
+      schema:
+        type: string
+        enum:
+          - item
+          - organization
+    - name: targetId
+      in: query
+      required: true
+      schema:
+        type: string
+    - name: cursor
+      in: query
+      schema:
+        type: string
+    - name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    "200":
+      description: Список отзывов
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/review.yaml#/CursorPaginatedReviews
+    "400":
+      description: Ошибка валидации
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+getReviewById:
+  operationId: getReviewById
+  tags:
+    - reviews
+  summary: Получить отзыв по ID
+  description: Возвращает полную информацию об отзыве по ID.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: reviewId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: Отзыв
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/review.yaml#/Review
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "404":
+      description: Отзыв не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+getReviewsByIds:
+  operationId: getReviewsByIds
+  tags:
+    - reviews
+  summary: Пакетная загрузка отзывов
+  description: Возвращает отзывы по массиву ID (для тикет-системы).
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - ids
+          properties:
+            ids:
+              type: array
+              items:
+                type: string
+              minItems: 1
+              maxItems: 100
+  responses:
+    "200":
+      description: Список отзывов
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - items
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: ../../shared/review.yaml#/Review
+    "400":
+      description: Ошибка валидации
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+
+getMyReviews:
+  operationId: getMyReviews
+  tags:
+    - reviews
+  summary: Мои отзывы
+  description: Возвращает отзывы текущего пользователя с пагинацией.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: cursor
+      in: query
+      schema:
+        type: string
+    - name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    "200":
+      description: Список отзывов
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/review.yaml#/CursorPaginatedReviews
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+
+getOrganizationReviews:
+  operationId: getOrganizationReviews
+  tags:
+    - reviews
+  summary: Отзывы организации
+  description: Возвращает отзывы на все items и саму организацию.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: cursor
+      in: query
+      schema:
+        type: string
+    - name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    "200":
+      description: Список отзывов
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/review.yaml#/CursorPaginatedReviews
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

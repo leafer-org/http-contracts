@@ -1,0 +1,168 @@
+ReviewTarget:
+  type: object
+  required:
+    - targetType
+    - targetId
+  properties:
+    targetType:
+      type: string
+      enum:
+        - item
+        - organization
+    targetId:
+      type: string
+
+Review:
+  type: object
+  required:
+    - reviewId
+    - authorId
+    - targetType
+    - targetId
+    - organizationId
+    - rating
+    - text
+    - status
+    - replyText
+    - repliedBy
+    - repliedAt
+    - disputeReason
+    - disputedBy
+    - disputedAt
+    - wasDisputed
+    - createdAt
+    - updatedAt
+  properties:
+    reviewId:
+      type: string
+    authorId:
+      type: string
+    targetType:
+      type: string
+      enum:
+        - item
+        - organization
+    targetId:
+      type: string
+    organizationId:
+      type: string
+    rating:
+      type: number
+      minimum: 0.5
+      maximum: 5
+    text:
+      type:
+        - string
+        - "null"
+    status:
+      type: string
+      enum:
+        - pending
+        - published
+        - disputed
+        - deleted
+    replyText:
+      type:
+        - string
+        - "null"
+    repliedBy:
+      type:
+        - string
+        - "null"
+    repliedAt:
+      type:
+        - string
+        - "null"
+      format: date-time
+    disputeReason:
+      type:
+        - string
+        - "null"
+    disputedBy:
+      type:
+        - string
+        - "null"
+    disputedAt:
+      type:
+        - string
+        - "null"
+      format: date-time
+    wasDisputed:
+      type: boolean
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+ReviewListItem:
+  type: object
+  required:
+    - reviewId
+    - authorId
+    - targetType
+    - targetId
+    - rating
+    - text
+    - status
+    - replyText
+    - repliedAt
+    - isMine
+    - isPending
+    - createdAt
+  properties:
+    reviewId:
+      type: string
+    authorId:
+      type: string
+    targetType:
+      type: string
+      enum:
+        - item
+        - organization
+    targetId:
+      type: string
+    rating:
+      type: number
+      minimum: 0.5
+      maximum: 5
+    text:
+      type:
+        - string
+        - "null"
+    status:
+      type: string
+      enum:
+        - pending
+        - published
+    replyText:
+      type:
+        - string
+        - "null"
+    repliedAt:
+      type:
+        - string
+        - "null"
+      format: date-time
+    isMine:
+      type: boolean
+    isPending:
+      type: boolean
+    createdAt:
+      type: string
+      format: date-time
+
+CursorPaginatedReviews:
+  type: object
+  required:
+    - items
+  properties:
+    items:
+      type: array
+      items:
+        $ref: "#/ReviewListItem"
+    nextCursor:
+      type:
+        - string
+        - "null"

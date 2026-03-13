@@ -244,6 +244,166 @@ CategoryFilters:
     commonFilters:
       $ref: "#/CommonFilters"
 
+ScheduleEntry:
+  type: object
+  required:
+    - dayOfWeek
+    - startTime
+    - endTime
+  properties:
+    dayOfWeek:
+      type: integer
+    startTime:
+      type: string
+    endTime:
+      type: string
+
+ItemWidgetView:
+  oneOf:
+    - type: object
+      required: [type, title, description]
+      properties:
+        type:
+          type: string
+          enum: [base-info]
+        title:
+          type: string
+        description:
+          type: string
+        imageId:
+          type:
+            - string
+            - "null"
+    - type: object
+      required: [type, value]
+      properties:
+        type:
+          type: string
+          enum: [age-group]
+        value:
+          type: string
+          enum: [children, adults, all]
+    - type: object
+      required: [type, cityId, lat, lng]
+      properties:
+        type:
+          type: string
+          enum: [location]
+        cityId:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        address:
+          type:
+            - string
+            - "null"
+    - type: object
+      required: [type, strategy]
+      properties:
+        type:
+          type: string
+          enum: [payment]
+        strategy:
+          type: string
+          enum: [free, one-time, subscription]
+        price:
+          type:
+            - number
+            - "null"
+    - type: object
+      required: [type, categoryIds]
+      properties:
+        type:
+          type: string
+          enum: [category]
+        categoryIds:
+          type: array
+          items:
+            type: string
+    - type: object
+      required: [type, organizationId, name]
+      properties:
+        type:
+          type: string
+          enum: [owner]
+        organizationId:
+          type: string
+        name:
+          type: string
+        avatarId:
+          type:
+            - string
+            - "null"
+    - type: object
+      required: [type, reviewCount]
+      properties:
+        type:
+          type: string
+          enum: [item-review]
+        rating:
+          type:
+            - number
+            - "null"
+        reviewCount:
+          type: integer
+    - type: object
+      required: [type, reviewCount]
+      properties:
+        type:
+          type: string
+          enum: [owner-review]
+        rating:
+          type:
+            - number
+            - "null"
+        reviewCount:
+          type: integer
+    - type: object
+      required: [type, dates]
+      properties:
+        type:
+          type: string
+          enum: [event-date-time]
+        dates:
+          type: array
+          items:
+            type: string
+            format: date-time
+    - type: object
+      required: [type, entries]
+      properties:
+        type:
+          type: string
+          enum: [schedule]
+        entries:
+          type: array
+          items:
+            $ref: "#/ScheduleEntry"
+  discriminator:
+    propertyName: type
+
+ItemDetailView:
+  type: object
+  required:
+    - itemId
+    - typeId
+    - widgets
+    - publishedAt
+  properties:
+    itemId:
+      type: string
+    typeId:
+      type: string
+    widgets:
+      type: array
+      items:
+        $ref: "#/ItemWidgetView"
+    publishedAt:
+      type: string
+      format: date-time
+
 SearchFacetCategory:
   type: object
   required:

@@ -1,0 +1,25 @@
+getDiscoveryItemDetail:
+  operationId: getDiscoveryItemDetail
+  tags:
+    - Discovery
+  description: Детальная страница товара — полные данные всех виджетов
+  parameters:
+    - name: itemId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID товара
+  responses:
+    "200":
+      description: Детали товара
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/discovery.yaml#/ItemDetailView
+    "404":
+      description: Товар не найден
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

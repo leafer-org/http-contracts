@@ -1,0 +1,81 @@
+recordViews:
+  operationId: recordViews
+  tags:
+    - Interactions
+  description: Записать показы карточек (batch). Дедупликация — 1 view на item в час.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - itemIds
+          properties:
+            itemIds:
+              type: array
+              items:
+                type: string
+                format: uuid
+              maxItems: 50
+              minItems: 1
+              description: ID товаров, показанных в ленте
+  responses:
+    "204":
+      description: Просмотры записаны
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+
+recordClick:
+  operationId: recordClick
+  tags:
+    - Interactions
+  description: Записать клик (переход на detail page)
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - itemId
+          properties:
+            itemId:
+              type: string
+              format: uuid
+              description: ID товара
+  responses:
+    "204":
+      description: Клик записан
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+
+recordShowContacts:
+  operationId: recordShowContacts
+  tags:
+    - Interactions
+  description: Записать раскрытие контактов организации
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - itemId
+          properties:
+            itemId:
+              type: string
+              format: uuid
+              description: ID товара
+  responses:
+    "204":
+      description: Событие записано
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
