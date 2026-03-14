@@ -81,9 +81,6 @@ paths:
   /media/upload-request:
     post:
       $ref: "./endpoints/media/media-upload-request.yaml#/mediaUploadRequest"
-  /media/confirm-upload:
-    post:
-      $ref: "./endpoints/media/media-confirm-upload.yaml#/mediaConfirmUpload"
   /media/preview/{mediaId}:
     get:
       $ref: "./endpoints/media/media-preview.yaml#/mediaPreview"

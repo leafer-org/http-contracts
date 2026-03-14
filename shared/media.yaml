@@ -86,19 +86,6 @@ UploadRequestResult:
       type: string
       format: uri
 
-ConfirmUploadInput:
-  type: object
-  required:
-    - fileIds
-  additionalProperties: false
-  properties:
-    fileIds:
-      type: array
-      items:
-        type: string
-        minLength: 1
-      minItems: 1
-
 PreviewDownloadUrlResult:
   type: object
   required:
