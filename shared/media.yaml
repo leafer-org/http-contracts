@@ -56,6 +56,7 @@ UploadRequestResult:
   required:
     - fileId
     - uploadUrl
+    - uploadFields
   properties:
     fileId:
       type: string
@@ -63,6 +64,10 @@ UploadRequestResult:
     uploadUrl:
       type: string
       format: uri
+    uploadFields:
+      type: object
+      additionalProperties:
+        type: string
 
 PreviewDownloadUrlResult:
   type: object
