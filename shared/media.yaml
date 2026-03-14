@@ -63,7 +63,6 @@ UploadRequest:
   required:
     - name
     - mimeType
-    - bucket
   additionalProperties: false
   properties:
     name:
@@ -73,9 +72,6 @@ UploadRequest:
     mimeType:
       type: string
       maxLength: 255
-    bucket:
-      type: string
-      minLength: 1
 
 UploadRequestResult:
   type: object
