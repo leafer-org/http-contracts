@@ -4,28 +4,6 @@ MediaVisibility:
     - PUBLIC
     - PRIVATE
 
-LinkMediaData:
-  type: object
-  required:
-    - bucket
-    - objectKey
-    - mediaId
-    - visibility
-  properties:
-    bucket:
-      type: string
-    objectKey:
-      type: string
-    mediaId:
-      type: string
-      minLength: 1
-      description: Идентификатор загруженного медиа-объекта
-    visibility:
-      $ref: "#/MediaVisibility"
-    contentType:
-      type: string
-      maxLength: 255
-
 GetMediaUploadUrlInput:
   type: object
   properties:

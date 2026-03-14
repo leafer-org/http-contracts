@@ -24,8 +24,10 @@ completeProfile:
               type: string
               minLength: 1
               maxLength: 100
-            avatarMedia:
-              $ref: ../../shared/media.yaml#/LinkMediaData
+            avatarId:
+              type: string
+              minLength: 1
+              description: Идентификатор медиа для аватара
             cityId:
               type: string
               minLength: 1
