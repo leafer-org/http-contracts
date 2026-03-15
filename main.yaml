@@ -98,6 +98,15 @@ paths:
   /media/image/upload-request:
     post:
       $ref: "./endpoints/media/media-upload-request.yaml#/mediaUploadRequest"
+  /media/video/upload-init:
+    post:
+      $ref: "./endpoints/media/media-video-upload-init.yaml#/mediaVideoUploadInit"
+  /media/video/upload-complete:
+    post:
+      $ref: "./endpoints/media/media-video-upload-complete.yaml#/mediaVideoUploadComplete"
+  /media/video/status/{mediaId}:
+    get:
+      $ref: "./endpoints/media/media-video-status.yaml#/mediaVideoStatus"
   /media/preview/{mediaId}:
     get:
       $ref: "./endpoints/media/media-preview.yaml#/mediaPreview"

@@ -1,0 +1,34 @@
+mediaVideoUploadComplete:
+  operationId: mediaVideoUploadComplete
+  tags:
+    - media
+  summary: Завершение multipart загрузки видео
+  description: Завершает S3 multipart upload и ставит видео в очередь обработки.
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../shared/media.yaml#/VideoUploadCompleteRequest
+  responses:
+    "200":
+      description: Upload завершён, видео в очереди обработки
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/media.yaml#/VideoUploadCompleteResult
+    "400":
+      description: Ошибка валидации / Доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Медиа не найдено
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

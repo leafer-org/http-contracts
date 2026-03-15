@@ -1,0 +1,40 @@
+mediaVideoUploadInit:
+  operationId: mediaVideoUploadInit
+  tags:
+    - media
+  summary: Инициализация multipart загрузки видео
+  description: Создаёт media record, инициирует S3 multipart upload, возвращает presigned URLs для частей.
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../shared/media.yaml#/VideoUploadInitRequest
+  responses:
+    "200":
+      description: Multipart upload инициирован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/media.yaml#/VideoUploadInitResult
+    "400":
+      description: Ошибка валидации / Доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Медиа не найдено
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

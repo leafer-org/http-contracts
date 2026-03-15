@@ -1,0 +1,26 @@
+mediaVideoStatus:
+  operationId: mediaVideoStatus
+  tags:
+    - media
+  summary: Статус обработки видео
+  description: Возвращает текущий статус обработки видео.
+  security: []
+  parameters:
+    - name: mediaId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: Статус обработки
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/media.yaml#/VideoStatusResult
+    "404":
+      description: Медиа не найдено
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

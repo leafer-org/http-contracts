@@ -89,3 +89,93 @@ PreviewDownloadUrlResult:
     url:
       type: string
       format: uri
+
+VideoUploadInitRequest:
+  type: object
+  required:
+    - name
+    - mimeType
+    - fileSize
+  additionalProperties: false
+  properties:
+    name:
+      type: string
+      minLength: 1
+      maxLength: 255
+    mimeType:
+      type: string
+      maxLength: 255
+    fileSize:
+      type: integer
+      minimum: 1
+
+VideoUploadInitResult:
+  type: object
+  required:
+    - mediaId
+    - uploadId
+    - partUrls
+  properties:
+    mediaId:
+      type: string
+      minLength: 1
+    uploadId:
+      type: string
+      minLength: 1
+    partUrls:
+      type: array
+      items:
+        type: string
+        format: uri
+
+VideoUploadCompleteRequest:
+  type: object
+  required:
+    - mediaId
+    - uploadId
+    - parts
+  additionalProperties: false
+  properties:
+    mediaId:
+      type: string
+      minLength: 1
+    uploadId:
+      type: string
+      minLength: 1
+    parts:
+      type: array
+      items:
+        type: object
+        required:
+          - partNumber
+          - etag
+        properties:
+          partNumber:
+            type: integer
+            minimum: 1
+          etag:
+            type: string
+
+VideoUploadCompleteResult:
+  type: object
+  required:
+    - mediaId
+  properties:
+    mediaId:
+      type: string
+
+VideoStatusResult:
+  type: object
+  required:
+    - mediaId
+    - processingStatus
+  properties:
+    mediaId:
+      type: string
+    processingStatus:
+      type: string
+      enum: [pending, processing, ready, failed]
+    duration:
+      type:
+        - integer
+        - "null"
