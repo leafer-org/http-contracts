@@ -41,6 +41,7 @@ ItemListView:
     - itemId
     - typeId
     - title
+    - hasVideo
     - reviewCount
     - categoryIds
   properties:
@@ -58,6 +59,8 @@ ItemListView:
       type: array
       items:
         $ref: ../shared/media.yaml#/MediaItem
+    hasVideo:
+      type: boolean
     price:
       oneOf:
         - $ref: "#/ItemPayment"
@@ -389,6 +392,7 @@ ItemDetailView:
     - itemId
     - typeId
     - widgets
+    - hasVideo
     - publishedAt
   properties:
     itemId:
@@ -399,6 +403,8 @@ ItemDetailView:
       type: array
       items:
         $ref: "#/ItemWidgetView"
+    hasVideo:
+      type: boolean
     publishedAt:
       type: string
       format: date-time
