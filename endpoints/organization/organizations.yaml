@@ -25,6 +25,10 @@ createOrganization:
               type:
                 - string
                 - "null"
+            media:
+              type: array
+              items:
+                $ref: ../../shared/media.yaml#/MediaItem
   responses:
     "201":
       description: Организация создана
@@ -110,6 +114,10 @@ updateInfoDraft:
               type:
                 - string
                 - "null"
+            media:
+              type: array
+              items:
+                $ref: ../../shared/media.yaml#/MediaItem
   responses:
     "200":
       description: Черновик обновлён

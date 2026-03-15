@@ -1,3 +1,15 @@
+MediaItem:
+  type: object
+  required:
+    - type
+    - mediaId
+  properties:
+    type:
+      type: string
+      enum: [image, video]
+    mediaId:
+      type: string
+
 MediaVisibility:
   type: string
   enum:

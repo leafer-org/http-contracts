@@ -95,7 +95,7 @@ paths:
       $ref: "./endpoints/cities/cities.yaml#/getCities"
 
   # ── Media ──────────────────────────────────────────────
-  /media/upload-request:
+  /media/image/upload-request:
     post:
       $ref: "./endpoints/media/media-upload-request.yaml#/mediaUploadRequest"
   /media/preview/{mediaId}:

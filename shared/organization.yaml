@@ -55,6 +55,7 @@ OrganizationDetail:
       required:
         - name
         - description
+        - media
         - publishedAt
       properties:
         name:
@@ -65,6 +66,10 @@ OrganizationDetail:
           type:
             - string
             - "null"
+        media:
+          type: array
+          items:
+            $ref: ../shared/media.yaml#/MediaItem
         publishedAt:
           type: string
           format: date-time
@@ -90,6 +95,7 @@ InfoDraft:
   required:
     - name
     - description
+    - media
     - status
   properties:
     name:
@@ -100,6 +106,10 @@ InfoDraft:
       type:
         - string
         - "null"
+    media:
+      type: array
+      items:
+        $ref: ../shared/media.yaml#/MediaItem
     status:
       $ref: "#/InfoDraftStatus"
 

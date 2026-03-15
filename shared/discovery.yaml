@@ -54,10 +54,10 @@ ItemListView:
       type:
         - string
         - "null"
-    imageId:
-      type:
-        - string
-        - "null"
+    media:
+      type: array
+      items:
+        $ref: ../shared/media.yaml#/MediaItem
     price:
       oneOf:
         - $ref: "#/ItemPayment"
@@ -260,7 +260,7 @@ ScheduleEntry:
 ItemWidgetView:
   oneOf:
     - type: object
-      required: [type, title, description]
+      required: [type, title, description, media]
       properties:
         type:
           type: string
@@ -269,10 +269,10 @@ ItemWidgetView:
           type: string
         description:
           type: string
-        imageId:
-          type:
-            - string
-            - "null"
+        media:
+          type: array
+          items:
+            $ref: ../shared/media.yaml#/MediaItem
     - type: object
       required: [type, value]
       properties:
