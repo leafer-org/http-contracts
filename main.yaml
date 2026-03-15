@@ -220,8 +220,13 @@ paths:
 
   # ── Organization: Admin ───────────────────────────────
   /admin/organizations:
+    get:
+      $ref: "./endpoints/organization/admin-organizations-search.yaml#/searchAdminOrganizations"
     post:
       $ref: "./endpoints/organization/admin-organizations.yaml#/adminCreateOrganization"
+  /admin/organizations/{orgId}/items:
+    post:
+      $ref: "./endpoints/organization/admin-organizations.yaml#/adminCreateItem"
   /admin/organizations/{id}/regenerate-token:
     post:
       $ref: "./endpoints/organization/admin-organizations.yaml#/regenerateClaimToken"

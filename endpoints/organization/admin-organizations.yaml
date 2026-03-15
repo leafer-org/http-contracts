@@ -56,6 +56,66 @@ adminCreateOrganization:
           schema:
             $ref: ../../shared/error-response.yaml#/DomainErrorResponse
 
+adminCreateItem:
+  operationId: adminCreateItem
+  tags:
+    - admin-organizations
+  summary: Создание товара админом
+  description: Создаёт товар в организации, обходя ограничения тарифного плана. Требуется ORGANIZATION.MANAGE.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - typeId
+            - widgets
+          properties:
+            typeId:
+              type: string
+            widgets:
+              type: array
+              items:
+                $ref: ../../shared/organization.yaml#/ItemWidget
+  responses:
+    "201":
+      description: Товар создан
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/organization.yaml#/ItemDetail
+    "400":
+      description: Ошибка валидации или доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется ORGANIZATION.MANAGE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация или тип товара не найдены
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
 regenerateClaimToken:
   operationId: regenerateClaimToken
   tags:

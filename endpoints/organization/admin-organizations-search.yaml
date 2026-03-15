@@ -1,0 +1,94 @@
+searchAdminOrganizations:
+  operationId: searchAdminOrganizations
+  tags:
+    - admin-organizations
+  summary: Поиск организаций (admin)
+  description: Поиск организаций с фильтрацией по статусу и текстовому запросу.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: query
+      in: query
+      schema:
+        type: string
+      description: Текстовый поисковый запрос
+    - name: status
+      in: query
+      schema:
+        type: string
+        enum:
+          - draft
+          - moderation-request
+          - rejected
+      description: Фильтр по статусу черновика
+    - name: from
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+      description: Смещение для пагинации
+    - name: size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Размер страницы
+  responses:
+    "200":
+      description: Результаты поиска
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - organizations
+              - total
+            properties:
+              organizations:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - organizationId
+                    - name
+                    - description
+                    - infoDraftStatus
+                    - hasPublication
+                    - employeeCount
+                    - planId
+                    - isClaimed
+                    - createdAt
+                    - updatedAt
+                  properties:
+                    organizationId:
+                      type: string
+                      format: uuid
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    infoDraftStatus:
+                      type: string
+                    hasPublication:
+                      type: boolean
+                    employeeCount:
+                      type: integer
+                    planId:
+                      type: string
+                    isClaimed:
+                      type: boolean
+                    createdAt:
+                      type: string
+                      format: date-time
+                    updatedAt:
+                      type: string
+                      format: date-time
+              total:
+                type: integer
+    "403":
+      description: Нет доступа (требуется ORGANIZATION.MODERATE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
