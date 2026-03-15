@@ -34,7 +34,12 @@ CmsCategoryListItem:
   required:
     - id
     - name
+    - iconId
     - status
+    - attributes
+    - iconUrl
+    - ageGroups
+    - allowedTypeIds
   properties:
     id:
       type: string
@@ -44,18 +49,38 @@ CmsCategoryListItem:
         - "null"
     name:
       type: string
+    iconId:
+      type: string
+    iconUrl:
+      type: string
+    ageGroups:
+      type: array
+      items:
+        type: string
+        enum: [children, adults]
+    allowedTypeIds:
+      type: array
+      items:
+        type: string
     status:
       type: string
       enum: [draft, published, unpublished]
+    attributes:
+      type: array
+      items:
+        $ref: "#/CategoryAttribute"
 
 CmsCategoryDetail:
   type: object
   required:
     - id
     - name
+    - iconId
     - allowedTypeIds
     - attributes
     - status
+    - iconUrl
+    - ageGroups
     - createdAt
     - updatedAt
   properties:
@@ -68,9 +93,14 @@ CmsCategoryDetail:
     name:
       type: string
     iconId:
-      type:
-        - string
-        - "null"
+      type: string
+    iconUrl:
+      type: string
+    ageGroups:
+      type: array
+      items:
+        type: string
+        enum: [children, adults]
     allowedTypeIds:
       type: array
       items:

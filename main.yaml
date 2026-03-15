@@ -36,6 +36,9 @@ paths:
   /me/profile:
     patch:
       $ref: "./endpoints/idp/update-profile.yaml#/updateProfile"
+  /me/permissions:
+    get:
+      $ref: "./endpoints/idp/get-my-permissions.yaml#/getMyPermissions"
 
   # ── IDP: Sessions ──────────────────────────────────────
   /me/sessions:
@@ -71,6 +74,20 @@ paths:
   /admin/users:
     get:
       $ref: "./endpoints/idp/admin-users-search.yaml#/searchAdminUsers"
+  /admin/users/{userId}/block:
+    post:
+      $ref: "./endpoints/idp/block-user.yaml#/blockUser"
+  /admin/users/{userId}/unblock:
+    post:
+      $ref: "./endpoints/idp/block-user.yaml#/unblockUser"
+  /admin/users/{userId}/sessions:
+    get:
+      $ref: "./endpoints/idp/admin-sessions.yaml#/getAdminUserSessions"
+    delete:
+      $ref: "./endpoints/idp/admin-sessions.yaml#/deleteAllAdminSessions"
+  /admin/users/{userId}/sessions/{sessionId}:
+    delete:
+      $ref: "./endpoints/idp/admin-sessions.yaml#/deleteAdminSession"
 
   # ── Cities ────────────────────────────────────────────
   /cities:

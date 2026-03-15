@@ -35,6 +35,8 @@ getPermissionsSchema:
                   items:
                     type: string
                 default: {}
+                description:
+                  type: string
     "403":
       description: Нет доступа
       content:

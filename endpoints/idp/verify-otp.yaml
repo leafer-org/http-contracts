@@ -73,28 +73,53 @@ verifyOtp:
               - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
               - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "403":
-      description: Превышено количество попыток
+      description: Превышено количество попыток / Пользователь заблокирован
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - type
-              - isDomain
-            properties:
-              type:
-                type: string
-                enum:
-                  - login_blocked
-              message:
-                type: string
-              isDomain:
-                type: boolean
-                enum:
-                  - true
-              retryAfterSec:
-                type: number
-                minimum: 60
+            oneOf:
+              - type: object
+                required:
+                  - type
+                  - isDomain
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - login_blocked
+                  message:
+                    type: string
+                  isDomain:
+                    type: boolean
+                    enum:
+                      - true
+                  retryAfterSec:
+                    type: number
+                    minimum: 60
+              - type: object
+                required:
+                  - type
+                  - isDomain
+                  - data
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - user_blocked
+                  message:
+                    type: string
+                  isDomain:
+                    type: boolean
+                    enum:
+                      - true
+                  data:
+                    type: object
+                    required:
+                      - reason
+                    properties:
+                      reason:
+                        type: string
+                        description: Причина блокировки
     "429":
       description: Слишком много запросов
       content:

@@ -32,6 +32,10 @@ updateProfile:
             lng:
               type: number
               description: Долгота
+            avatarId:
+              type: string
+              minLength: 1
+              description: Идентификатор загруженного файла аватарки
   responses:
     "200":
       description: Обновлённый профиль

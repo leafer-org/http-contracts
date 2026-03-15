@@ -1,0 +1,108 @@
+blockUser:
+  operationId: blockUser
+  tags:
+    - admin
+    - users
+  summary: Блокировка пользователя
+  description: Блокирует пользователя. Все сессии будут удалены, вход запрещён.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - reason
+          properties:
+            reason:
+              type: string
+              minLength: 1
+              description: Причина блокировки
+  responses:
+    "200":
+      description: Пользователь заблокирован
+      content:
+        application/json:
+          schema:
+            type: object
+    "400":
+      description: Пользователь уже заблокирован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+unblockUser:
+  operationId: unblockUser
+  tags:
+    - admin
+    - users
+  summary: Разблокировка пользователя
+  description: Снимает блокировку с пользователя.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    "200":
+      description: Пользователь разблокирован
+      content:
+        application/json:
+          schema:
+            type: object
+    "400":
+      description: Пользователь не заблокирован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      description: Не авторизован
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError

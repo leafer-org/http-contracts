@@ -125,6 +125,7 @@ CategoryListItem:
   required:
     - categoryId
     - name
+    - iconId
     - childCount
     - itemCount
   properties:
@@ -133,9 +134,7 @@ CategoryListItem:
     name:
       type: string
     iconId:
-      type:
-        - string
-        - "null"
+      type: string
     childCount:
       type: integer
       minimum: 0

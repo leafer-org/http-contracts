@@ -1,0 +1,101 @@
+getAdminUserSessions:
+  operationId: getAdminUserSessions
+  tags:
+    - admin
+    - sessions
+  summary: Получение сессий пользователя (admin)
+  description: Возвращает список активных сессий указанного пользователя.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    "200":
+      description: Список сессий
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - sessions
+            additionalProperties: false
+            properties:
+              sessions:
+                type: array
+                items:
+                  $ref: ../../shared/session.yaml#/UserSession
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+deleteAdminSession:
+  operationId: deleteAdminSession
+  tags:
+    - admin
+    - sessions
+  summary: Удаление сессии пользователя (admin)
+  description: Удаляет указанную сессию пользователя.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: sessionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    "204":
+      description: Сессия удалена
+    "401":
+      description: Сессия не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+deleteAllAdminSessions:
+  operationId: deleteAllAdminSessions
+  tags:
+    - admin
+    - sessions
+  summary: Удаление всех сессий пользователя (admin)
+  description: Удаляет все сессии указанного пользователя.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    "204":
+      description: Все сессии удалены
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

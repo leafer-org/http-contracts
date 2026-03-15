@@ -66,6 +66,13 @@ searchAdminUsers:
                     createdAt:
                       type: string
                       format: date-time
+                    blockedAt:
+                      type: string
+                      format: date-time
+                      nullable: true
+                    blockReason:
+                      type: string
+                      nullable: true
                     updatedAt:
                       type: string
                       format: date-time

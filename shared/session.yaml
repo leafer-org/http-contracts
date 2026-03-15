@@ -18,3 +18,19 @@ UserSession:
       type: string
       format: date-time
       description: Дата истечения сессии
+    ip:
+      type: string
+      nullable: true
+      description: IP-адрес при создании сессии
+    city:
+      type: string
+      nullable: true
+      description: Город по IP-адресу
+    country:
+      type: string
+      nullable: true
+      description: Страна по IP-адресу
+    deviceName:
+      type: string
+      nullable: true
+      description: Устройство (например "Chrome on macOS")

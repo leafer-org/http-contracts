@@ -73,7 +73,9 @@ createCmsCategory:
           required:
             - id
             - name
+            - iconId
             - allowedTypeIds
+            - ageGroups
           properties:
             id:
               type: string
@@ -85,13 +87,16 @@ createCmsCategory:
               type: string
               minLength: 1
             iconId:
-              type:
-                - string
-                - "null"
+              type: string
             allowedTypeIds:
               type: array
               items:
                 type: string
+            ageGroups:
+              type: array
+              items:
+                type: string
+                enum: [children, adults]
   responses:
     "201":
       description: Категория создана
@@ -142,15 +147,15 @@ updateCmsCategory:
           type: object
           required:
             - name
+            - iconId
             - allowedTypeIds
+            - ageGroups
           properties:
             name:
               type: string
               minLength: 1
             iconId:
-              type:
-                - string
-                - "null"
+              type: string
             parentCategoryId:
               type:
                 - string
@@ -159,6 +164,11 @@ updateCmsCategory:
               type: array
               items:
                 type: string
+            ageGroups:
+              type: array
+              items:
+                type: string
+                enum: [children, adults]
   responses:
     "200":
       description: Категория обновлена
