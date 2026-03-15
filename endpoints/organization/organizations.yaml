@@ -216,6 +216,112 @@ approveInfoModeration:
           schema:
             $ref: ../../shared/error-response.yaml#/DomainErrorResponse
 
+deleteOrganization:
+  operationId: deleteOrganization
+  tags:
+    - organizations
+  summary: Удаление организации
+  description: Удаляет организацию и все её товары. Доступно владельцу организации или админу с ORGANIZATION.MANAGE.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Организация удалена
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+claimOrganization:
+  operationId: claimOrganization
+  tags:
+    - organizations
+  summary: Привязка владельца к организации
+  description: Привязывает текущего пользователя как владельца организации по claim token.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - token
+          properties:
+            token:
+              type: string
+              format: uuid
+  responses:
+    "200":
+      description: Организация привязана
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/organization.yaml#/OrganizationDetail
+    "400":
+      description: Доменная ошибка (невалидный токен или организация уже привязана)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+
+unpublishOrganization:
+  operationId: unpublishOrganization
+  tags:
+    - organizations
+  summary: Снять организацию с публикации
+  description: Снимает организацию с публикации и снимает все опубликованные товары. Требуется publish_organization или ORGANIZATION.MANAGE.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Организация снята с публикации
+    "400":
+      description: Доменная ошибка (организация не опубликована)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется publish_organization)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
 rejectInfoModeration:
   operationId: rejectInfoModeration
   tags:

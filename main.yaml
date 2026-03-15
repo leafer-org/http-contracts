@@ -218,15 +218,28 @@ paths:
     patch:
       $ref: "./endpoints/cms/item-types.yaml#/updateCmsItemType"
 
+  # ── Organization: Admin ───────────────────────────────
+  /admin/organizations:
+    post:
+      $ref: "./endpoints/organization/admin-organizations.yaml#/adminCreateOrganization"
+  /admin/organizations/{id}/regenerate-token:
+    post:
+      $ref: "./endpoints/organization/admin-organizations.yaml#/regenerateClaimToken"
+
   # ── Organization: CRUD ────────────────────────────────
   /organizations:
     post:
       $ref: "./endpoints/organization/organizations.yaml#/createOrganization"
+  /organizations/claim:
+    post:
+      $ref: "./endpoints/organization/organizations.yaml#/claimOrganization"
   /organizations/{id}:
     get:
       $ref: "./endpoints/organization/organizations.yaml#/getOrganization"
     patch:
       $ref: "./endpoints/organization/organizations.yaml#/updateInfoDraft"
+    delete:
+      $ref: "./endpoints/organization/organizations.yaml#/deleteOrganization"
   /organizations/{id}/submit-for-moderation:
     post:
       $ref: "./endpoints/organization/organizations.yaml#/submitInfoForModeration"
@@ -236,6 +249,9 @@ paths:
   /organizations/{id}/reject-moderation:
     post:
       $ref: "./endpoints/organization/organizations.yaml#/rejectInfoModeration"
+  /organizations/{id}/unpublish:
+    post:
+      $ref: "./endpoints/organization/organizations.yaml#/unpublishOrganization"
 
   # ── Organization: Employees ───────────────────────────
   /organizations/{id}/employees:

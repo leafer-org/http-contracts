@@ -1,0 +1,105 @@
+adminCreateOrganization:
+  operationId: adminCreateOrganization
+  tags:
+    - admin-organizations
+  summary: Создание организации админом
+  description: Создаёт организацию без владельца. Возвращает claim token для привязки владельца. Требуется ORGANIZATION.MANAGE.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              minLength: 1
+            description:
+              type: string
+            avatarId:
+              type:
+                - string
+                - "null"
+  responses:
+    "201":
+      description: Организация создана
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - id
+              - claimToken
+            properties:
+              id:
+                type: string
+                format: uuid
+              claimToken:
+                type: string
+                format: uuid
+    "400":
+      description: Ошибка валидации
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется ORGANIZATION.MANAGE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+regenerateClaimToken:
+  operationId: regenerateClaimToken
+  tags:
+    - admin-organizations
+  summary: Перегенерация claim token
+  description: Генерирует новый claim token для непривязанной организации. Требуется ORGANIZATION.MANAGE.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: Новый claim token
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - claimToken
+            properties:
+              claimToken:
+                type: string
+                format: uuid
+    "400":
+      description: Организация уже привязана
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется ORGANIZATION.MANAGE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
