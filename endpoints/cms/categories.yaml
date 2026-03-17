@@ -88,6 +88,9 @@ createCmsCategory:
               minLength: 1
             iconId:
               type: string
+            order:
+              type: integer
+              default: 0
             allowedTypeIds:
               type: array
               items:
@@ -156,6 +159,9 @@ updateCmsCategory:
               minLength: 1
             iconId:
               type: string
+            order:
+              type: integer
+              default: 0
             parentCategoryId:
               type:
                 - string

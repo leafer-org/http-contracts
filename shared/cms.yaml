@@ -35,6 +35,7 @@ CmsCategoryListItem:
     - id
     - name
     - iconId
+    - order
     - status
     - attributes
     - iconUrl
@@ -51,6 +52,9 @@ CmsCategoryListItem:
       type: string
     iconId:
       type: string
+    order:
+      type: integer
+      default: 0
     iconUrl:
       type: string
     ageGroups:
@@ -76,6 +80,7 @@ CmsCategoryDetail:
     - id
     - name
     - iconId
+    - order
     - allowedTypeIds
     - attributes
     - status
@@ -94,6 +99,9 @@ CmsCategoryDetail:
       type: string
     iconId:
       type: string
+    order:
+      type: integer
+      default: 0
     iconUrl:
       type: string
     ageGroups:
