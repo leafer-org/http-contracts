@@ -164,7 +164,7 @@ VideoUploadCompleteResult:
     mediaId:
       type: string
 
-VideoStatusResult:
+VideoPreviewResult:
   type: object
   required:
     - mediaId
@@ -175,6 +175,23 @@ VideoStatusResult:
     processingStatus:
       type: string
       enum: [pending, processing, ready, failed]
+    progress:
+      type:
+        - integer
+        - "null"
+      minimum: 0
+      maximum: 100
+      description: Прогресс обработки в процентах (0-100). Доступен только при статусе processing.
+    hlsUrl:
+      type:
+        - string
+        - "null"
+      format: uri
+    thumbnailUrl:
+      type:
+        - string
+        - "null"
+      format: uri
     duration:
       type:
         - integer

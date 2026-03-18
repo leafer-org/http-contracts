@@ -1,0 +1,33 @@
+mediaVideoPreview:
+  operationId: mediaVideoPreview
+  tags:
+    - media
+  summary: Получение информации для воспроизведения видео
+  description: Возвращает HLS URL и превью для видео.
+  security: []
+  parameters:
+    - name: mediaId
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+  responses:
+    "200":
+      description: Информация для воспроизведения
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/media.yaml#/VideoPreviewResult
+    "403":
+      description: Файл уже используется, превью недоступно
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Медиа не найдено
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

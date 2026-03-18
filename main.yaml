@@ -104,9 +104,9 @@ paths:
   /media/video/upload-complete:
     post:
       $ref: "./endpoints/media/media-video-upload-complete.yaml#/mediaVideoUploadComplete"
-  /media/video/status/{mediaId}:
+  /media/video/preview/{mediaId}:
     get:
-      $ref: "./endpoints/media/media-video-status.yaml#/mediaVideoStatus"
+      $ref: "./endpoints/media/media-video-preview.yaml#/mediaVideoPreview"
   /media/preview/{mediaId}:
     get:
       $ref: "./endpoints/media/media-preview.yaml#/mediaPreview"
