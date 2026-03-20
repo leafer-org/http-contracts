@@ -187,6 +187,11 @@ VideoPreviewResult:
         - string
         - "null"
       format: uri
+    mp4PreviewUrl:
+      type:
+        - string
+        - "null"
+      format: uri
     thumbnailUrl:
       type:
         - string
