@@ -236,6 +236,9 @@ paths:
   /admin/organizations/{orgId}/items:
     post:
       $ref: "./endpoints/organization/admin-organizations.yaml#/adminCreateItem"
+  /admin/organizations/{id}/claim-token:
+    get:
+      $ref: "./endpoints/organization/admin-organizations.yaml#/getClaimToken"
   /admin/organizations/{id}/regenerate-token:
     post:
       $ref: "./endpoints/organization/admin-organizations.yaml#/regenerateClaimToken"

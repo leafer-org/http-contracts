@@ -69,7 +69,7 @@ OrganizationDetail:
         media:
           type: array
           items:
-            $ref: ../shared/media.yaml#/MediaItem
+            $ref: ../shared/media.yaml#/ResolvedMediaItem
         publishedAt:
           type: string
           format: date-time
@@ -109,7 +109,7 @@ InfoDraft:
     media:
       type: array
       items:
-        $ref: ../shared/media.yaml#/MediaItem
+        $ref: ../shared/media.yaml#/ResolvedMediaItem
     status:
       $ref: "#/InfoDraftStatus"
 

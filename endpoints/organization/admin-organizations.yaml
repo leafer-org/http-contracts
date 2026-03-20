@@ -120,6 +120,43 @@ adminCreateItem:
           schema:
             $ref: ../../shared/error-response.yaml#/DomainErrorResponse
 
+getClaimToken:
+  operationId: getClaimToken
+  tags:
+    - admin-organizations
+  summary: Получение текущего claim token
+  description: Возвращает текущий claim token организации (null если привязана).
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: Текущий claim token
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - claimToken
+            properties:
+              claimToken:
+                type:
+                  - string
+                  - "null"
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется ORGANIZATION.MANAGE)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
 regenerateClaimToken:
   operationId: regenerateClaimToken
   tags:

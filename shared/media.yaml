@@ -10,6 +10,64 @@ MediaItem:
     mediaId:
       type: string
 
+ResolvedMediaItem:
+  type: object
+  required:
+    - type
+    - mediaId
+  properties:
+    type:
+      type: string
+      enum: [image, video]
+    mediaId:
+      type: string
+    preview:
+      oneOf:
+        - $ref: "#/ImagePreview"
+        - $ref: "#/VideoPreview"
+
+ImagePreview:
+  type: object
+  required:
+    - url
+  properties:
+    url:
+      type: string
+      format: uri
+
+VideoPreview:
+  type: object
+  required:
+    - thumbnailUrl
+    - hlsUrl
+    - mp4PreviewUrl
+    - processingStatus
+  properties:
+    thumbnailUrl:
+      type:
+        - string
+        - "null"
+      format: uri
+    hlsUrl:
+      type:
+        - string
+        - "null"
+      format: uri
+    mp4PreviewUrl:
+      type:
+        - string
+        - "null"
+      format: uri
+    processingStatus:
+      type: string
+      enum: [pending, processing, ready, failed]
+    progress:
+      type:
+        - integer
+        - "null"
+      minimum: 0
+      maximum: 100
+
 MediaVisibility:
   type: string
   enum:
