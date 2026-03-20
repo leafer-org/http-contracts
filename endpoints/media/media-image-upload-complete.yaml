@@ -1,0 +1,34 @@
+mediaImageUploadComplete:
+  operationId: mediaImageUploadComplete
+  tags:
+    - media
+  summary: Подтверждение загрузки изображения
+  description: Извлекает метаданные изображения (размеры, формат) из S3 и сохраняет в сущность.
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../shared/media.yaml#/ImageUploadCompleteRequest
+  responses:
+    "200":
+      description: Метаданные изображения извлечены и сохранены
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/media.yaml#/ImageUploadCompleteResult
+    "400":
+      description: Ошибка валидации / Доменная ошибка
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Медиа не найдено
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

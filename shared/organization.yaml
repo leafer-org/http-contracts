@@ -97,6 +97,9 @@ InfoDraft:
     - description
     - media
     - status
+    - updatedAt
+    - hasDraftChanges
+    - canSubmitForModeration
   properties:
     name:
       type: string
@@ -112,6 +115,13 @@ InfoDraft:
         $ref: ../shared/media.yaml#/ResolvedMediaItem
     status:
       $ref: "#/InfoDraftStatus"
+    updatedAt:
+      type: string
+      format: date-time
+    hasDraftChanges:
+      type: boolean
+    canSubmitForModeration:
+      type: boolean
 
 # ── Employees ──────────────────────────────────────
 

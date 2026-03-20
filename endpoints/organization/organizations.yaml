@@ -292,6 +292,44 @@ claimOrganization:
     "401":
       $ref: ../../shared/responses.yaml#/UnauthorizedError
 
+discardInfoDraftChanges:
+  operationId: discardInfoDraftChanges
+  tags:
+    - organizations
+  summary: Отменить изменения черновика
+  description: Возвращает черновик к состоянию опубликованного профиля. Требуется edit_organization.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "204":
+      description: Изменения черновика отменены
+    "400":
+      description: Доменная ошибка (нет публикации или нет изменений)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа (требуется edit_organization)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
 unpublishOrganization:
   operationId: unpublishOrganization
   tags:

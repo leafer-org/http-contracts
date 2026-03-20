@@ -259,3 +259,30 @@ VideoPreviewResult:
       type:
         - integer
         - "null"
+
+ImageUploadCompleteRequest:
+  type: object
+  required:
+    - mediaId
+  additionalProperties: false
+  properties:
+    mediaId:
+      type: string
+      minLength: 1
+
+ImageUploadCompleteResult:
+  type: object
+  required:
+    - mediaId
+    - width
+    - height
+    - mimeType
+  properties:
+    mediaId:
+      type: string
+    width:
+      type: integer
+    height:
+      type: integer
+    mimeType:
+      type: string
