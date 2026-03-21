@@ -1,8 +1,15 @@
-ItemPayment:
+PaymentOption:
   type: object
   required:
+    - name
     - strategy
   properties:
+    name:
+      type: string
+    description:
+      type:
+        - string
+        - "null"
     strategy:
       type: string
       enum: [free, one-time, subscription]
@@ -10,6 +17,16 @@ ItemPayment:
       type:
         - number
         - "null"
+
+ItemPayment:
+  type: object
+  required:
+    - options
+  properties:
+    options:
+      type: array
+      items:
+        $ref: "#/PaymentOption"
 
 ItemOwnerSummary:
   type: object
@@ -302,18 +319,15 @@ ItemWidgetView:
             - string
             - "null"
     - type: object
-      required: [type, strategy]
+      required: [type, options]
       properties:
         type:
           type: string
           enum: [payment]
-        strategy:
-          type: string
-          enum: [free, one-time, subscription]
-        price:
-          type:
-            - number
-            - "null"
+        options:
+          type: array
+          items:
+            $ref: "#/PaymentOption"
     - type: object
       required: [type, categoryIds]
       properties:

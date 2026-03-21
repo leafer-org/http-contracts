@@ -39,11 +39,15 @@ createCmsItemType:
           required:
             - id
             - name
+            - label
             - widgetSettings
           properties:
             id:
               type: string
             name:
+              type: string
+              minLength: 1
+            label:
               type: string
               minLength: 1
             widgetSettings:
@@ -94,9 +98,13 @@ updateCmsItemType:
           type: object
           required:
             - name
+            - label
             - widgetSettings
           properties:
             name:
+              type: string
+              minLength: 1
+            label:
               type: string
               minLength: 1
             widgetSettings:

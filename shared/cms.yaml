@@ -218,11 +218,14 @@ ItemTypeListItem:
   required:
     - id
     - name
+    - label
     - widgetSettings
   properties:
     id:
       type: string
     name:
+      type: string
+    label:
       type: string
     widgetSettings:
       type: array
@@ -234,6 +237,7 @@ ItemTypeDetail:
   required:
     - id
     - name
+    - label
     - widgetSettings
     - createdAt
     - updatedAt
@@ -241,6 +245,8 @@ ItemTypeDetail:
     id:
       type: string
     name:
+      type: string
+    label:
       type: string
     widgetSettings:
       type: array
