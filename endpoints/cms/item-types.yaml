@@ -39,22 +39,17 @@ createCmsItemType:
           required:
             - id
             - name
-            - availableWidgetTypes
-            - requiredWidgetTypes
+            - widgetSettings
           properties:
             id:
               type: string
             name:
               type: string
               minLength: 1
-            availableWidgetTypes:
+            widgetSettings:
               type: array
               items:
-                $ref: ../../shared/cms.yaml#/WidgetType
-            requiredWidgetTypes:
-              type: array
-              items:
-                $ref: ../../shared/cms.yaml#/WidgetType
+                $ref: ../../shared/cms.yaml#/WidgetSettings
   responses:
     "201":
       description: Тип товара создан
@@ -99,20 +94,15 @@ updateCmsItemType:
           type: object
           required:
             - name
-            - availableWidgetTypes
-            - requiredWidgetTypes
+            - widgetSettings
           properties:
             name:
               type: string
               minLength: 1
-            availableWidgetTypes:
+            widgetSettings:
               type: array
               items:
-                $ref: ../../shared/cms.yaml#/WidgetType
-            requiredWidgetTypes:
-              type: array
-              items:
-                $ref: ../../shared/cms.yaml#/WidgetType
+                $ref: ../../shared/cms.yaml#/WidgetSettings
   responses:
     "200":
       description: Тип товара обновлён

@@ -132,34 +132,109 @@ CmsCategoryDetail:
       type: string
       format: date-time
 
+PaymentStrategy:
+  type: string
+  enum:
+    - free
+    - one-time
+    - subscription
+
+BaseWidgetSettings:
+  type: object
+  required:
+    - type
+    - required
+  properties:
+    type:
+      type: string
+      enum:
+        - base-info
+        - age-group
+        - location
+        - category
+        - owner
+        - item-review
+        - owner-review
+        - schedule
+    required:
+      type: boolean
+
+PaymentWidgetSettings:
+  type: object
+  required:
+    - type
+    - required
+    - allowedStrategies
+  properties:
+    type:
+      type: string
+      enum:
+        - payment
+    required:
+      type: boolean
+    allowedStrategies:
+      type: array
+      items:
+        $ref: "#/PaymentStrategy"
+
+EventDateTimeWidgetSettings:
+  type: object
+  required:
+    - type
+    - required
+  properties:
+    type:
+      type: string
+      enum:
+        - event-date-time
+    required:
+      type: boolean
+    maxDates:
+      type:
+        - integer
+        - "null"
+
+WidgetSettings:
+  oneOf:
+    - $ref: "#/PaymentWidgetSettings"
+    - $ref: "#/EventDateTimeWidgetSettings"
+    - $ref: "#/BaseWidgetSettings"
+  discriminator:
+    propertyName: type
+    mapping:
+      payment: "#/PaymentWidgetSettings"
+      event-date-time: "#/EventDateTimeWidgetSettings"
+      base-info: "#/BaseWidgetSettings"
+      age-group: "#/BaseWidgetSettings"
+      location: "#/BaseWidgetSettings"
+      category: "#/BaseWidgetSettings"
+      owner: "#/BaseWidgetSettings"
+      item-review: "#/BaseWidgetSettings"
+      owner-review: "#/BaseWidgetSettings"
+      schedule: "#/BaseWidgetSettings"
+
 ItemTypeListItem:
   type: object
   required:
     - id
     - name
-    - availableWidgetTypes
-    - requiredWidgetTypes
+    - widgetSettings
   properties:
     id:
       type: string
     name:
       type: string
-    availableWidgetTypes:
+    widgetSettings:
       type: array
       items:
-        $ref: "#/WidgetType"
-    requiredWidgetTypes:
-      type: array
-      items:
-        $ref: "#/WidgetType"
+        $ref: "#/WidgetSettings"
 
 ItemTypeDetail:
   type: object
   required:
     - id
     - name
-    - availableWidgetTypes
-    - requiredWidgetTypes
+    - widgetSettings
     - createdAt
     - updatedAt
   properties:
@@ -167,14 +242,10 @@ ItemTypeDetail:
       type: string
     name:
       type: string
-    availableWidgetTypes:
+    widgetSettings:
       type: array
       items:
-        $ref: "#/WidgetType"
-    requiredWidgetTypes:
-      type: array
-      items:
-        $ref: "#/WidgetType"
+        $ref: "#/WidgetSettings"
     createdAt:
       type: string
       format: date-time
