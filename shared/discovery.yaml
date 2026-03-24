@@ -397,6 +397,16 @@ ItemWidgetView:
           type: array
           items:
             $ref: "#/ScheduleEntry"
+    - type: object
+      required: [type, contacts]
+      properties:
+        type:
+          type: string
+          enum: [contact-info]
+        contacts:
+          type: array
+          items:
+            $ref: ../shared/cms.yaml#/ContactLink
   discriminator:
     propertyName: type
 

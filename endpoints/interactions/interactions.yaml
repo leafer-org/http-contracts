@@ -79,3 +79,36 @@ recordShowContacts:
       description: Событие записано
     "401":
       $ref: ../../shared/responses.yaml#/UnauthorizedError
+
+recordContactClick:
+  operationId: recordContactClick
+  tags:
+    - Interactions
+  description: Записать клик по конкретной ссылке контактов
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - itemId
+          properties:
+            itemId:
+              type: string
+              format: uuid
+              description: ID товара
+            contactIndex:
+              type: integer
+              description: Индекс ссылки в массиве contacts
+            contactType:
+              type: string
+              enum: [phone, email, link]
+              description: Тип ссылки
+  responses:
+    "204":
+      description: Клик записан
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError

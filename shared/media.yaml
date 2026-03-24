@@ -1,4 +1,4 @@
-MediaItem:
+ImageMediaItem:
   type: object
   required:
     - type
@@ -6,11 +6,11 @@ MediaItem:
   properties:
     type:
       type: string
-      enum: [image, video]
+      enum: [image]
     mediaId:
       type: string
 
-ResolvedMediaItem:
+VideoMediaItem:
   type: object
   required:
     - type
@@ -18,13 +18,57 @@ ResolvedMediaItem:
   properties:
     type:
       type: string
-      enum: [image, video]
+      enum: [video]
+    mediaId:
+      type: string
+
+MediaItem:
+  oneOf:
+    - $ref: "#/ImageMediaItem"
+    - $ref: "#/VideoMediaItem"
+  discriminator:
+    propertyName: type
+    mapping:
+      image: "#/ImageMediaItem"
+      video: "#/VideoMediaItem"
+
+ResolvedImageMedia:
+  type: object
+  required:
+    - type
+    - mediaId
+  properties:
+    type:
+      type: string
+      enum: [image]
     mediaId:
       type: string
     preview:
-      oneOf:
-        - $ref: "#/ImagePreview"
-        - $ref: "#/VideoPreview"
+      $ref: "#/ImagePreview"
+
+ResolvedVideoMedia:
+  type: object
+  required:
+    - type
+    - mediaId
+  properties:
+    type:
+      type: string
+      enum: [video]
+    mediaId:
+      type: string
+    preview:
+      $ref: "#/VideoPreview"
+
+ResolvedMediaItem:
+  oneOf:
+    - $ref: "#/ResolvedImageMedia"
+    - $ref: "#/ResolvedVideoMedia"
+  discriminator:
+    propertyName: type
+    mapping:
+      image: "#/ResolvedImageMedia"
+      video: "#/ResolvedVideoMedia"
 
 ImagePreview:
   type: object

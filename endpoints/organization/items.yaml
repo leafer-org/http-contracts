@@ -27,7 +27,7 @@ createItem:
             widgets:
               type: array
               items:
-                $ref: ../../shared/organization.yaml#/ItemWidget
+                $ref: ../../shared/organization.yaml#/ItemWidgetInput
   responses:
     "201":
       description: Товар создан
@@ -168,7 +168,7 @@ updateItemDraft:
             widgets:
               type: array
               items:
-                $ref: ../../shared/organization.yaml#/ItemWidget
+                $ref: ../../shared/organization.yaml#/ItemWidgetInput
   responses:
     "200":
       description: Черновик обновлён

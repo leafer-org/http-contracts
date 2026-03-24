@@ -29,6 +29,10 @@ createOrganization:
               type: array
               items:
                 $ref: ../../shared/media.yaml#/MediaItem
+            contacts:
+              type: array
+              items:
+                $ref: ../../shared/cms.yaml#/ContactLink
   responses:
     "201":
       description: Организация создана
@@ -118,6 +122,10 @@ updateInfoDraft:
               type: array
               items:
                 $ref: ../../shared/media.yaml#/MediaItem
+            contacts:
+              type: array
+              items:
+                $ref: ../../shared/cms.yaml#/ContactLink
   responses:
     "200":
       description: Черновик обновлён

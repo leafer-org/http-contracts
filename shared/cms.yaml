@@ -11,6 +11,21 @@ WidgetType:
     - owner-review
     - event-date-time
     - schedule
+    - contact-info
+
+ContactLink:
+  type: object
+  required:
+    - type
+    - value
+  properties:
+    type:
+      type: string
+      enum: [phone, email, link]
+    value:
+      type: string
+    label:
+      type: string
 
 CategoryAttribute:
   type: object
@@ -156,6 +171,7 @@ BaseWidgetSettings:
         - item-review
         - owner-review
         - schedule
+        - contact-info
     required:
       type: boolean
 
@@ -212,6 +228,7 @@ WidgetSettings:
       item-review: "#/BaseWidgetSettings"
       owner-review: "#/BaseWidgetSettings"
       schedule: "#/BaseWidgetSettings"
+      contact-info: "#/BaseWidgetSettings"
 
 ItemTypeListItem:
   type: object

@@ -70,6 +70,10 @@ OrganizationDetail:
           type: array
           items:
             $ref: ../shared/media.yaml#/ResolvedMediaItem
+        contacts:
+          type: array
+          items:
+            $ref: ../shared/cms.yaml#/ContactLink
         publishedAt:
           type: string
           format: date-time
@@ -113,6 +117,10 @@ InfoDraft:
       type: array
       items:
         $ref: ../shared/media.yaml#/ResolvedMediaItem
+    contacts:
+      type: array
+      items:
+        $ref: ../shared/cms.yaml#/ContactLink
     status:
       $ref: "#/InfoDraftStatus"
     updatedAt:
@@ -185,16 +193,253 @@ Subscription:
 # ── Items ──────────────────────────────────────────
 
 ItemWidget:
-  type: object
-  required:
-    - type
-    - data
-  properties:
-    type:
-      $ref: ../shared/cms.yaml#/WidgetType
-    data:
-      type: object
-      additionalProperties: true
+  oneOf:
+    - type: object
+      required: [type, title, description, media]
+      properties:
+        type:
+          type: string
+          enum: [base-info]
+        title:
+          type: string
+        description:
+          type: string
+        media:
+          type: array
+          items:
+            $ref: ../shared/media.yaml#/MediaItem
+    - type: object
+      required: [type, value]
+      properties:
+        type:
+          type: string
+          enum: [age-group]
+        value:
+          type: string
+          enum: [children, adults, all]
+    - type: object
+      required: [type, cityId, lat, lng]
+      properties:
+        type:
+          type: string
+          enum: [location]
+        cityId:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        address:
+          type:
+            - string
+            - "null"
+    - type: object
+      required: [type, options]
+      properties:
+        type:
+          type: string
+          enum: [payment]
+        options:
+          type: array
+          items:
+            $ref: ../shared/discovery.yaml#/PaymentOption
+    - type: object
+      required: [type, categoryIds]
+      properties:
+        type:
+          type: string
+          enum: [category]
+        categoryIds:
+          type: array
+          items:
+            type: string
+        attributes:
+          type: array
+          items:
+            type: object
+            required: [attributeId, value]
+            properties:
+              attributeId:
+                type: string
+              value:
+                type: string
+    - type: object
+      required: [type, organizationId, name]
+      properties:
+        type:
+          type: string
+          enum: [owner]
+        organizationId:
+          type: string
+        name:
+          type: string
+        avatarId:
+          type:
+            - string
+            - "null"
+    - type: object
+      required: [type, reviewCount]
+      properties:
+        type:
+          type: string
+          enum: [item-review]
+        rating:
+          type:
+            - number
+            - "null"
+        reviewCount:
+          type: integer
+    - type: object
+      required: [type, reviewCount]
+      properties:
+        type:
+          type: string
+          enum: [owner-review]
+        rating:
+          type:
+            - number
+            - "null"
+        reviewCount:
+          type: integer
+    - type: object
+      required: [type, dates]
+      properties:
+        type:
+          type: string
+          enum: [event-date-time]
+        dates:
+          type: array
+          items:
+            type: string
+            format: date-time
+    - type: object
+      required: [type, entries]
+      properties:
+        type:
+          type: string
+          enum: [schedule]
+        entries:
+          type: array
+          items:
+            $ref: ../shared/discovery.yaml#/ScheduleEntry
+    - type: object
+      required: [type, contacts]
+      properties:
+        type:
+          type: string
+          enum: [contact-info]
+        contacts:
+          type: array
+          items:
+            $ref: ../shared/cms.yaml#/ContactLink
+  discriminator:
+    propertyName: type
+
+# Input widgets (from frontend) — without auto-filled widgets (owner, item-review, owner-review)
+ItemWidgetInput:
+  oneOf:
+    - type: object
+      required: [type, title, description, media]
+      properties:
+        type:
+          type: string
+          enum: [base-info]
+        title:
+          type: string
+        description:
+          type: string
+        media:
+          type: array
+          items:
+            $ref: ../shared/media.yaml#/MediaItem
+    - type: object
+      required: [type, value]
+      properties:
+        type:
+          type: string
+          enum: [age-group]
+        value:
+          type: string
+          enum: [children, adults, all]
+    - type: object
+      required: [type, cityId, lat, lng]
+      properties:
+        type:
+          type: string
+          enum: [location]
+        cityId:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        address:
+          type:
+            - string
+            - "null"
+    - type: object
+      required: [type, options]
+      properties:
+        type:
+          type: string
+          enum: [payment]
+        options:
+          type: array
+          items:
+            $ref: ../shared/discovery.yaml#/PaymentOption
+    - type: object
+      required: [type, categoryIds]
+      properties:
+        type:
+          type: string
+          enum: [category]
+        categoryIds:
+          type: array
+          items:
+            type: string
+        attributes:
+          type: array
+          items:
+            type: object
+            required: [attributeId, value]
+            properties:
+              attributeId:
+                type: string
+              value:
+                type: string
+    - type: object
+      required: [type, dates]
+      properties:
+        type:
+          type: string
+          enum: [event-date-time]
+        dates:
+          type: array
+          items:
+            type: string
+            format: date-time
+    - type: object
+      required: [type, entries]
+      properties:
+        type:
+          type: string
+          enum: [schedule]
+        entries:
+          type: array
+          items:
+            $ref: ../shared/discovery.yaml#/ScheduleEntry
+    - type: object
+      required: [type, contacts]
+      properties:
+        type:
+          type: string
+          enum: [contact-info]
+        contacts:
+          type: array
+          items:
+            $ref: ../shared/cms.yaml#/ContactLink
+  discriminator:
+    propertyName: type
 
 ItemDraft:
   type: object

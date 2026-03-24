@@ -28,6 +28,10 @@ adminCreateOrganization:
               type: array
               items:
                 $ref: ../../shared/media.yaml#/MediaItem
+            contacts:
+              type: array
+              items:
+                $ref: ../../shared/cms.yaml#/ContactLink
   responses:
     "201":
       description: Организация создана
@@ -89,7 +93,7 @@ adminCreateItem:
             widgets:
               type: array
               items:
-                $ref: ../../shared/organization.yaml#/ItemWidget
+                $ref: ../../shared/organization.yaml#/ItemWidgetInput
   responses:
     "201":
       description: Товар создан

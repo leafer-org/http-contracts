@@ -157,6 +157,9 @@ paths:
   /interactions/show-contacts:
     post:
       $ref: "./endpoints/interactions/interactions.yaml#/recordShowContacts"
+  /interactions/contact-click:
+    post:
+      $ref: "./endpoints/interactions/interactions.yaml#/recordContactClick"
 
   # ── Reviews ──────────────────────────────────────────────
   /reviews:
