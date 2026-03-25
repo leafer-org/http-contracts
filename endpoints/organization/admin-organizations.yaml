@@ -32,6 +32,15 @@ adminCreateOrganization:
               type: array
               items:
                 $ref: ../../shared/cms.yaml#/ContactLink
+            team:
+              type: object
+              properties:
+                title:
+                  type: string
+                members:
+                  type: array
+                  items:
+                    $ref: ../../shared/cms.yaml#/TeamMember
   responses:
     "201":
       description: Организация создана

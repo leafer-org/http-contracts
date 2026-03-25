@@ -385,8 +385,7 @@ ItemWidgetView:
         dates:
           type: array
           items:
-            type: string
-            format: date-time
+            $ref: ../shared/cms.yaml#/EventDate
     - type: object
       required: [type, entries]
       properties:
@@ -407,6 +406,18 @@ ItemWidgetView:
           type: array
           items:
             $ref: ../shared/cms.yaml#/ContactLink
+    - type: object
+      required: [type, title, members]
+      properties:
+        type:
+          type: string
+          enum: [team]
+        title:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: ../shared/cms.yaml#/TeamMember
   discriminator:
     propertyName: type
 

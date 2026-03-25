@@ -12,6 +12,7 @@ WidgetType:
     - event-date-time
     - schedule
     - contact-info
+    - team
 
 ContactLink:
   type: object
@@ -24,6 +25,34 @@ ContactLink:
       enum: [phone, email, link]
     value:
       type: string
+    label:
+      type: string
+
+TeamMember:
+  type: object
+  required:
+    - name
+    - media
+  properties:
+    name:
+      type: string
+    description:
+      type: string
+    media:
+      type: array
+      items:
+        $ref: ../shared/media.yaml#/MediaItem
+    employeeUserId:
+      type: string
+
+EventDate:
+  type: object
+  required:
+    - date
+  properties:
+    date:
+      type: string
+      format: date-time
     label:
       type: string
 
@@ -172,6 +201,7 @@ BaseWidgetSettings:
         - owner-review
         - schedule
         - contact-info
+        - team
     required:
       type: boolean
 
@@ -229,6 +259,7 @@ WidgetSettings:
       owner-review: "#/BaseWidgetSettings"
       schedule: "#/BaseWidgetSettings"
       contact-info: "#/BaseWidgetSettings"
+      team: "#/BaseWidgetSettings"
 
 ItemTypeListItem:
   type: object

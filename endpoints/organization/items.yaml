@@ -63,7 +63,7 @@ getItems:
   tags:
     - organization-items
   summary: Список товаров организации
-  description: Возвращает список товаров организации с информацией о статусе черновика и публикации.
+  description: Возвращает список товаров организации с поиском и курсорной пагинацией.
   security:
     - bearerAuth: []
   parameters:
@@ -72,15 +72,37 @@ getItems:
       required: true
       schema:
         type: string
+    - name: search
+      in: query
+      schema:
+        type: string
+    - name: cursor
+      in: query
+      schema:
+        type: string
+    - name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
   responses:
     "200":
       description: Список товаров
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: ../../shared/organization.yaml#/ItemListItem
+            type: object
+            required:
+              - items
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: ../../shared/organization.yaml#/ItemListItem
+              nextCursor:
+                type:
+                  - string
+                  - "null"
     "401":
       $ref: ../../shared/responses.yaml#/UnauthorizedError
     "403":
