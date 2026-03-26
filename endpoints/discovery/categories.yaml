@@ -26,6 +26,7 @@ getCategoryItems:
     - Discovery
   description: Товары в категории с фильтрами и сортировкой
   parameters:
+    - $ref: ../../shared/device.yaml#/DeviceDprHeader
     - name: id
       in: path
       required: true

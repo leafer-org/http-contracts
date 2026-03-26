@@ -4,6 +4,7 @@ getDiscoveryItemDetail:
     - Discovery
   description: Детальная страница товара — полные данные всех виджетов
   parameters:
+    - $ref: ../../shared/device.yaml#/DeviceDprHeader
     - name: itemId
       in: path
       required: true

@@ -4,6 +4,7 @@ getFeed:
     - Discovery
   description: Персонализированная лента рекомендаций по всему каталогу
   parameters:
+    - $ref: ../../shared/device.yaml#/DeviceDprHeader
     - name: cityId
       in: query
       required: true

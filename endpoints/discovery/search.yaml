@@ -4,6 +4,7 @@ searchItems:
     - Discovery
   description: Полнотекстовый поиск товаров через Meilisearch с динамическими фасетными фильтрами
   parameters:
+    - $ref: ../../shared/device.yaml#/DeviceDprHeader
     - name: query
       in: query
       required: true

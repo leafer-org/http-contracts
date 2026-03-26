@@ -395,7 +395,6 @@ paths:
   /admin/tickets/{ticketId}/comments:
     post:
       $ref: "./endpoints/tickets/tickets.yaml#/addAdminTicketComment"
-
   # ── Tickets: Admin Triggers ────────────────────────────
   /admin/boards/triggers:
     get:

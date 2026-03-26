@@ -24,6 +24,7 @@ User:
   required:
     - id
     - phoneNumber
+    - cityId
     - createdAt
     - updatedAt
   properties:
@@ -41,6 +42,15 @@ User:
       maxLength: 80
     avatar:
       $ref: "#/Avatar"
+    cityId:
+      type: string
+      description: Идентификатор города пользователя
+    lat:
+      type: number
+      description: Широта
+    lng:
+      type: number
+      description: Долгота
     createdAt:
       type: string
       format: date-time

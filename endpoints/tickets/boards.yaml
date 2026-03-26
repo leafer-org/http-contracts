@@ -138,6 +138,10 @@ updateAdminBoard:
               type: array
               items:
                 type: string
+            closeTrigger:
+              oneOf:
+                - type: "null"
+                - $ref: ../../shared/ticket.yaml#/CloseTrigger
   responses:
     "200":
       description: Доска обновлена

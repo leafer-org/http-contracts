@@ -57,6 +57,10 @@ TicketDetail:
       type:
         - string
         - "null"
+    eventId:
+      type:
+        - string
+        - "null"
     data:
       $ref: "#/TicketData"
     status:
@@ -236,12 +240,29 @@ BoardDetail:
       type: array
       items:
         $ref: "#/BoardAutomation"
+    closeTrigger:
+      oneOf:
+        - type: "null"
+        - $ref: "#/CloseTrigger"
     createdAt:
       type: string
       format: date-time
     updatedAt:
       type: string
       format: date-time
+
+CloseTrigger:
+  type: object
+  required:
+    - type
+    - addComment
+  properties:
+    type:
+      type: string
+      enum:
+        - on-moderation-resolved
+    addComment:
+      type: boolean
 
 BoardSubscription:
   type: object

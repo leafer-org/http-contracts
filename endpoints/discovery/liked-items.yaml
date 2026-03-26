@@ -6,6 +6,7 @@ getLikedItems:
   security:
     - bearerAuth: []
   parameters:
+    - $ref: ../../shared/device.yaml#/DeviceDprHeader
     - name: search
       in: query
       required: false

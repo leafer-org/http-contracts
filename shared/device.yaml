@@ -1,0 +1,10 @@
+DeviceDprHeader:
+  name: X-Device-DPR
+  in: header
+  required: false
+  description: "Device pixel ratio (1–4). Используется для вычисления размеров изображений через imgproxy. По умолчанию 3."
+  schema:
+    type: number
+    minimum: 1
+    maximum: 4
+    default: 3
