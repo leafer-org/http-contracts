@@ -146,6 +146,9 @@ paths:
       $ref: "./endpoints/discovery/like-item.yaml#/likeItem"
     delete:
       $ref: "./endpoints/discovery/like-item.yaml#/unlikeItem"
+  /items/liked-status:
+    post:
+      $ref: "./endpoints/discovery/liked-status.yaml#/checkLikedStatus"
 
   # ── Interactions ─────────────────────────────────────────
   /interactions/views:
