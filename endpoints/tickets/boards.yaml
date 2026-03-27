@@ -100,6 +100,46 @@ createAdminBoard:
           schema:
             $ref: ../../shared/error-response.yaml#/OpenApiValidationError
 
+getAdminBoardDetail:
+  operationId: getAdminBoardDetail
+  tags:
+    - tickets
+    - boards
+  summary: Детали доски
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: boardId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: Детали доски
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/ticket.yaml#/BoardDetail
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Доска не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
 updateAdminBoard:
   operationId: updateAdminBoard
   tags:

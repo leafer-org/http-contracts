@@ -342,6 +342,8 @@ paths:
     post:
       $ref: "./endpoints/tickets/boards.yaml#/createAdminBoard"
   /admin/boards/{boardId}:
+    get:
+      $ref: "./endpoints/tickets/boards.yaml#/getAdminBoardDetail"
     patch:
       $ref: "./endpoints/tickets/boards.yaml#/updateAdminBoard"
     delete:
