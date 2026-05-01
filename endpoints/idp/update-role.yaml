@@ -23,8 +23,9 @@ updateRole:
             - permissions
           properties:
             permissions:
-              type: object
-              additionalProperties: true
+              type: array
+              items:
+                type: string
   responses:
     "200":
       description: Роль обновлена

@@ -19,8 +19,9 @@ getMyPermissions:
             additionalProperties: false
             properties:
               permissions:
-                type: object
-                additionalProperties: {}
+                type: array
+                items:
+                  type: string
     "401":
       description: Не авторизован
       content:

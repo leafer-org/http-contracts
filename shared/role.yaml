@@ -14,8 +14,9 @@ Role:
     name:
       type: string
     permissions:
-      type: object
-      additionalProperties: true
+      type: array
+      items:
+        type: string
     isStatic:
       type: boolean
     createdAt:
@@ -24,3 +25,33 @@ Role:
     updatedAt:
       type: string
       format: date-time
+
+PermissionItem:
+  type: object
+  required:
+    - id
+    - title
+    - description
+  properties:
+    id:
+      type: string
+    title:
+      type: string
+    description:
+      type: string
+
+PermissionGroup:
+  type: object
+  required:
+    - id
+    - title
+    - permissions
+  properties:
+    id:
+      type: string
+    title:
+      type: string
+    permissions:
+      type: array
+      items:
+        $ref: '#/PermissionItem'
