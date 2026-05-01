@@ -37,6 +37,28 @@ getAdminBoards:
           schema:
             $ref: ../../shared/error-response.yaml#/OpenApiValidationError
 
+getAdminMyBoards:
+  operationId: getAdminMyBoards
+  tags: [tickets, boards]
+  summary: Мои доски (где текущий пользователь — участник)
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: Список досок
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../shared/ticket.yaml#/BoardListItem
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
 createAdminBoard:
   operationId: createAdminBoard
   tags:
@@ -178,10 +200,6 @@ updateAdminBoard:
               type: array
               items:
                 type: string
-            closeTrigger:
-              oneOf:
-                - type: "null"
-                - $ref: ../../shared/ticket.yaml#/CloseTrigger
   responses:
     "200":
       description: Доска обновлена
@@ -300,11 +318,13 @@ addAdminBoardSubscription:
                 items:
                   $ref: ../../shared/ticket.yaml#/BoardSubscription
     "400":
-      description: Ошибка валидации
+      description: Ошибка валидации / невалидный triggerId
       content:
         application/json:
           schema:
-            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+            oneOf:
+              - $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+              - $ref: ../../shared/error-response.yaml#/DomainErrorResponse
     "403":
       description: Нет доступа
       content:
@@ -386,9 +406,9 @@ addAdminBoardMember:
         schema:
           type: object
           required:
-            - userId
+            - phone
           properties:
-            userId:
+            phone:
               type: string
   responses:
     "201":
@@ -594,3 +614,185 @@ removeAdminBoardAutomation:
         application/json:
           schema:
             $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+# ── Close Subscriptions ──
+
+addAdminBoardCloseSubscription:
+  operationId: addAdminBoardCloseSubscription
+  tags: [tickets, boards]
+  summary: Добавление подписки закрытия
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: boardId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [triggerId, filters, addComment]
+          properties:
+            triggerId:
+              type: string
+            filters:
+              type: array
+              items:
+                $ref: ../../shared/ticket.yaml#/SubscriptionFilter
+            addComment:
+              type: boolean
+  responses:
+    "201":
+      description: Подписка закрытия добавлена
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [boardId, closeSubscriptions]
+            properties:
+              boardId:
+                type: string
+              closeSubscriptions:
+                type: array
+                items:
+                  $ref: ../../shared/ticket.yaml#/CloseSubscription
+    "400":
+      description: Невалидный triggerId
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Доска не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+removeAdminBoardCloseSubscription:
+  operationId: removeAdminBoardCloseSubscription
+  tags: [tickets, boards]
+  summary: Удаление подписки закрытия
+  security:
+    - bearerAuth: []
+  parameters:
+    - { name: boardId, in: path, required: true, schema: { type: string } }
+    - { name: subId, in: path, required: true, schema: { type: string } }
+  responses:
+    "204":
+      description: Подписка закрытия удалена
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Доска или подписка не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+# ── Redirect Subscriptions ──
+
+addAdminBoardRedirectSubscription:
+  operationId: addAdminBoardRedirectSubscription
+  tags: [tickets, boards]
+  summary: Добавление подписки перенаправления
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: boardId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [triggerId, filters, targetBoardId, addComment, commentTemplate]
+          properties:
+            triggerId:
+              type: string
+            filters:
+              type: array
+              items:
+                $ref: ../../shared/ticket.yaml#/SubscriptionFilter
+            targetBoardId:
+              type: string
+            addComment:
+              type: boolean
+            commentTemplate:
+              type: string
+  responses:
+    "201":
+      description: Подписка перенаправления добавлена
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [boardId, redirectSubscriptions]
+            properties:
+              boardId:
+                type: string
+              redirectSubscriptions:
+                type: array
+                items:
+                  $ref: ../../shared/ticket.yaml#/RedirectSubscription
+    "400":
+      description: targetBoardId совпадает с текущей доской
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Доска или целевая доска не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+
+removeAdminBoardRedirectSubscription:
+  operationId: removeAdminBoardRedirectSubscription
+  tags: [tickets, boards]
+  summary: Удаление подписки перенаправления
+  security:
+    - bearerAuth: []
+  parameters:
+    - { name: boardId, in: path, required: true, schema: { type: string } }
+    - { name: subId, in: path, required: true, schema: { type: string } }
+  responses:
+    "204":
+      description: Подписка перенаправления удалена
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Доска или подписка не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

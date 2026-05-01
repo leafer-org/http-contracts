@@ -28,6 +28,8 @@ TicketListItem:
       type:
         - string
         - "null"
+    data:
+      $ref: "#/TicketData"
     createdAt:
       type: string
       format: date-time
@@ -122,6 +124,48 @@ TicketData:
         description:
           type: string
         avatarUrl:
+          type:
+            - string
+            - "null"
+
+TicketDataInput:
+  type: object
+  properties:
+    item:
+      type:
+        - object
+        - "null"
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        typeId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        imageId:
+          type:
+            - string
+            - "null"
+        categoryIds:
+          type: array
+          items:
+            type: string
+    organization:
+      type:
+        - object
+        - "null"
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        avatarId:
           type:
             - string
             - "null"
@@ -236,33 +280,28 @@ BoardDetail:
       type: array
       items:
         type: string
+    members:
+      type: array
+      items:
+        $ref: "#/BoardMember"
     automations:
       type: array
       items:
         $ref: "#/BoardAutomation"
-    closeTrigger:
-      oneOf:
-        - type: "null"
-        - $ref: "#/CloseTrigger"
+    closeSubscriptions:
+      type: array
+      items:
+        $ref: "#/CloseSubscription"
+    redirectSubscriptions:
+      type: array
+      items:
+        $ref: "#/RedirectSubscription"
     createdAt:
       type: string
       format: date-time
     updatedAt:
       type: string
       format: date-time
-
-CloseTrigger:
-  type: object
-  required:
-    - type
-    - addComment
-  properties:
-    type:
-      type: string
-      enum:
-        - on-moderation-resolved
-    addComment:
-      type: boolean
 
 BoardSubscription:
   type: object
@@ -307,6 +346,67 @@ BoardAutomation:
             - string
             - "null"
 
+BoardMember:
+  type: object
+  required:
+    - userId
+    - fullName
+    - phone
+    - role
+  properties:
+    userId:
+      type: string
+    fullName:
+      type: string
+    phone:
+      type: string
+    role:
+      type: string
+
+CloseSubscription:
+  type: object
+  required:
+    - id
+    - triggerId
+    - filters
+    - addComment
+  properties:
+    id:
+      type: string
+    triggerId:
+      type: string
+    filters:
+      type: array
+      items:
+        $ref: "#/SubscriptionFilter"
+    addComment:
+      type: boolean
+
+RedirectSubscription:
+  type: object
+  required:
+    - id
+    - triggerId
+    - filters
+    - targetBoardId
+    - addComment
+    - commentTemplate
+  properties:
+    id:
+      type: string
+    triggerId:
+      type: string
+    filters:
+      type: array
+      items:
+        $ref: "#/SubscriptionFilter"
+    targetBoardId:
+      type: string
+    addComment:
+      type: boolean
+    commentTemplate:
+      type: string
+
 SubscriptionFilter:
   oneOf:
     - type: object
@@ -324,18 +424,25 @@ SubscriptionFilter:
     - type: object
       required:
         - type
-        - filterId
-        - params
+        - n
       properties:
         type:
           type: string
           enum:
-            - programmatic
-        filterId:
+            - every-nth
+        n:
+          type: integer
+    - type: object
+      required:
+        - type
+        - percent
+      properties:
+        type:
           type: string
-        params:
-          type: object
-          additionalProperties: true
+          enum:
+            - random-sample
+        percent:
+          type: number
   discriminator:
     propertyName: type
 
@@ -344,14 +451,64 @@ TriggerInfo:
   required:
     - triggerId
     - name
-    - scope
+    - categories
+    - params
   properties:
     triggerId:
       type: string
     name:
       type: string
-    scope:
+    categories:
+      type: array
+      items:
+        type: string
+        enum:
+          - open
+          - close
+          - redirect
+    params:
+      type: array
+      items:
+        $ref: "#/TriggerParam"
+
+TriggerParam:
+  type: object
+  required:
+    - key
+    - label
+    - type
+  properties:
+    key:
+      type: string
+    label:
+      type: string
+    type:
       type: string
       enum:
-        - platform
-        - organization
+        - number
+        - string
+
+FilterInfo:
+  type: object
+  required:
+    - type
+    - name
+    - categories
+    - params
+  properties:
+    type:
+      type: string
+    name:
+      type: string
+    categories:
+      type: array
+      items:
+        type: string
+        enum:
+          - open
+          - close
+          - redirect
+    params:
+      type: array
+      items:
+        $ref: "#/TriggerParam"

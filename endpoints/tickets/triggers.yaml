@@ -7,14 +7,15 @@ getAdminTicketTriggers:
   security:
     - bearerAuth: []
   parameters:
-    - name: scope
+    - name: category
       in: query
       schema:
         type: string
         enum:
-          - platform
-          - organization
-      description: Фильтр по scope
+          - open
+          - close
+          - redirect
+      description: Фильтр по категории подписки
   responses:
     "200":
       description: Список триггеров
@@ -24,6 +25,50 @@ getAdminTicketTriggers:
             type: array
             items:
               $ref: ../../shared/ticket.yaml#/TriggerInfo
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
+getAdminTicketFilters:
+  operationId: getAdminTicketFilters
+  tags:
+    - tickets
+    - boards
+  summary: Справочник фильтров
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: category
+      in: query
+      schema:
+        type: string
+        enum:
+          - open
+          - close
+          - redirect
+      description: Фильтр по категории подписки
+  responses:
+    "200":
+      description: Список фильтров
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../shared/ticket.yaml#/FilterInfo
+    "401":
+      $ref: ../../shared/responses.yaml#/UnauthorizedError
     "403":
       description: Нет доступа
       content:

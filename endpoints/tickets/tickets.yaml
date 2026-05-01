@@ -119,6 +119,29 @@ getAdminMyTickets:
           schema:
             $ref: ../../shared/error-response.yaml#/OpenApiValidationError
 
+unassignAllAdminTickets:
+  operationId: unassignAllAdminTickets
+  tags:
+    - tickets
+  summary: Снять назначение со всех своих тикетов
+  security:
+    - bearerAuth: []
+  responses:
+    "204":
+      description: Все тикеты текущего пользователя сняты с назначения
+    "403":
+      description: Нет доступа
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "500":
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/OpenApiValidationError
+
 getAdminTicketDetail:
   operationId: getAdminTicketDetail
   tags:
@@ -181,7 +204,7 @@ createAdminTicket:
               type: string
               minLength: 1
             data:
-              $ref: ../../shared/ticket.yaml#/TicketData
+              $ref: ../../shared/ticket.yaml#/TicketDataInput
   responses:
     "201":
       description: Тикет создан

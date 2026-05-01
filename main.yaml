@@ -341,6 +341,9 @@ paths:
       $ref: "./endpoints/tickets/boards.yaml#/getAdminBoards"
     post:
       $ref: "./endpoints/tickets/boards.yaml#/createAdminBoard"
+  /admin/boards/my:
+    get:
+      $ref: "./endpoints/tickets/boards.yaml#/getAdminMyBoards"
   /admin/boards/{boardId}:
     get:
       $ref: "./endpoints/tickets/boards.yaml#/getAdminBoardDetail"
@@ -366,6 +369,18 @@ paths:
   /admin/boards/{boardId}/automation/{automationId}:
     delete:
       $ref: "./endpoints/tickets/boards.yaml#/removeAdminBoardAutomation"
+  /admin/boards/{boardId}/close-subscriptions:
+    post:
+      $ref: "./endpoints/tickets/boards.yaml#/addAdminBoardCloseSubscription"
+  /admin/boards/{boardId}/close-subscriptions/{subId}:
+    delete:
+      $ref: "./endpoints/tickets/boards.yaml#/removeAdminBoardCloseSubscription"
+  /admin/boards/{boardId}/redirect-subscriptions:
+    post:
+      $ref: "./endpoints/tickets/boards.yaml#/addAdminBoardRedirectSubscription"
+  /admin/boards/{boardId}/redirect-subscriptions/{subId}:
+    delete:
+      $ref: "./endpoints/tickets/boards.yaml#/removeAdminBoardRedirectSubscription"
 
   # ── Tickets: Admin Tickets ─────────────────────────────
   /admin/tickets:
@@ -376,6 +391,9 @@ paths:
   /admin/tickets/my:
     get:
       $ref: "./endpoints/tickets/tickets.yaml#/getAdminMyTickets"
+  /admin/tickets/unassign-all:
+    post:
+      $ref: "./endpoints/tickets/tickets.yaml#/unassignAllAdminTickets"
   /admin/tickets/{ticketId}:
     get:
       $ref: "./endpoints/tickets/tickets.yaml#/getAdminTicketDetail"
@@ -404,3 +422,6 @@ paths:
   /admin/boards/triggers:
     get:
       $ref: "./endpoints/tickets/triggers.yaml#/getAdminTicketTriggers"
+  /admin/boards/filters:
+    get:
+      $ref: "./endpoints/tickets/triggers.yaml#/getAdminTicketFilters"
