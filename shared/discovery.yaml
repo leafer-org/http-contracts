@@ -105,6 +105,32 @@ ItemListView:
       type: array
       items:
         type: string
+    eventDateTime:
+      type:
+        - string
+        - "null"
+      format: date-time
+    nextScheduleSlot:
+      oneOf:
+        - type: object
+          required: [dayOfWeek, startTime, endTime]
+          properties:
+            dayOfWeek:
+              type: integer
+            startTime:
+              type: string
+            endTime:
+              type: string
+        - type: "null"
+    distanceKm:
+      type:
+        - number
+        - "null"
+    cardAgeGroup:
+      type:
+        - string
+        - "null"
+      enum: [adults, children, all, null]
 
 LikedItemView:
   allOf:
@@ -150,7 +176,7 @@ CategoryListItem:
   required:
     - categoryId
     - name
-    - iconId
+    - iconUrl
     - childCount
     - itemCount
   properties:
@@ -158,7 +184,7 @@ CategoryListItem:
       type: string
     name:
       type: string
-    iconId:
+    iconUrl:
       type: string
     childCount:
       type: integer

@@ -204,6 +204,8 @@ BaseWidgetSettings:
         - team
     required:
       type: boolean
+    showOnCard:
+      type: boolean
 
 PaymentWidgetSettings:
   type: object
@@ -217,6 +219,8 @@ PaymentWidgetSettings:
       enum:
         - payment
     required:
+      type: boolean
+    showOnCard:
       type: boolean
     allowedStrategies:
       type: array
@@ -234,6 +238,8 @@ EventDateTimeWidgetSettings:
       enum:
         - event-date-time
     required:
+      type: boolean
+    showOnCard:
       type: boolean
     maxDates:
       type:

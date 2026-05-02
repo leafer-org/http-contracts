@@ -202,6 +202,12 @@ updateCmsCategory:
         application/json:
           schema:
             $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "409":
+      description: Категория опубликована — обновление недоступно (нужно сначала unpublish)
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
 
 publishCmsCategory:
   operationId: publishCmsCategory
