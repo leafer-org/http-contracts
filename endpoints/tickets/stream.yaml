@@ -1,0 +1,41 @@
+getAdminBoardStream:
+  operationId: getAdminBoardStream
+  tags:
+    - tickets
+    - sse
+  summary: SSE-стрим изменений тикетов доски
+  description: |
+    Server-Sent Events. Соединение остаётся открытым; сервер шлёт события вида
+    `event: ticket.<action>` + `data: <json>` (см. TicketRealtimeEvent ниже).
+    Каждые 15 секунд — heartbeat-комментарий `: keepalive`. Last-Event-ID
+    не используется — догона нет, на разрыв клиент переподключается и делает
+    обычный refetch GET /admin/tickets?boardId=.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: boardId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: SSE-поток открыт
+      content:
+        text/event-stream:
+          schema:
+            $ref: ../../shared/ticket.yaml#/TicketRealtimeEvent
+    "401":
+      description: Не авторизован
+    "403":
+      description: Нет прав или не участник доски
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse
+    "404":
+      description: Доска не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

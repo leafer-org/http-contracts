@@ -488,6 +488,141 @@ TriggerParam:
         - number
         - string
 
+TicketRealtimeEvent:
+  description: |
+    Событие SSE-стрима /admin/boards/{boardId}/stream. На проводе — формат:
+    `event: <type>` + `data: <json фрагмент по type>`.
+    Discriminator — поле `type`.
+  oneOf:
+    - $ref: "#/TicketRealtimeCreatedEvent"
+    - $ref: "#/TicketRealtimeAssignedEvent"
+    - $ref: "#/TicketRealtimeReassignedEvent"
+    - $ref: "#/TicketRealtimeUnassignedEvent"
+    - $ref: "#/TicketRealtimeDoneEvent"
+    - $ref: "#/TicketRealtimeReopenedEvent"
+    - $ref: "#/TicketRealtimeCommentedEvent"
+    - $ref: "#/TicketRealtimeMovedEvent"
+  discriminator:
+    propertyName: type
+
+TicketRealtimeCreatedEvent:
+  type: object
+  required: [type, ticketId, boardId, triggerId, createdBy]
+  properties:
+    type:
+      type: string
+      enum: [ticket.created]
+    ticketId:
+      type: string
+    boardId:
+      type: string
+    triggerId:
+      type: [string, "null"]
+    createdBy:
+      type: string
+
+TicketRealtimeAssignedEvent:
+  type: object
+  required: [type, ticketId, boardId, assigneeId]
+  properties:
+    type:
+      type: string
+      enum: [ticket.assigned]
+    ticketId:
+      type: string
+    boardId:
+      type: string
+    assigneeId:
+      type: string
+
+TicketRealtimeReassignedEvent:
+  type: object
+  required: [type, ticketId, boardId, oldAssigneeId, newAssigneeId, reassignedBy]
+  properties:
+    type:
+      type: string
+      enum: [ticket.reassigned]
+    ticketId:
+      type: string
+    boardId:
+      type: string
+    oldAssigneeId:
+      type: string
+    newAssigneeId:
+      type: string
+    reassignedBy:
+      type: string
+
+TicketRealtimeUnassignedEvent:
+  type: object
+  required: [type, ticketId, boardId, oldAssigneeId]
+  properties:
+    type:
+      type: string
+      enum: [ticket.unassigned]
+    ticketId:
+      type: string
+    boardId:
+      type: string
+    oldAssigneeId:
+      type: string
+
+TicketRealtimeDoneEvent:
+  type: object
+  required: [type, ticketId, boardId]
+  properties:
+    type:
+      type: string
+      enum: [ticket.done]
+    ticketId:
+      type: string
+    boardId:
+      type: string
+
+TicketRealtimeReopenedEvent:
+  type: object
+  required: [type, ticketId, boardId, reopenedBy]
+  properties:
+    type:
+      type: string
+      enum: [ticket.reopened]
+    ticketId:
+      type: string
+    boardId:
+      type: string
+    reopenedBy:
+      type: string
+
+TicketRealtimeCommentedEvent:
+  type: object
+  required: [type, ticketId, boardId, authorId]
+  properties:
+    type:
+      type: string
+      enum: [ticket.commented]
+    ticketId:
+      type: string
+    boardId:
+      type: string
+    authorId:
+      type: string
+
+TicketRealtimeMovedEvent:
+  type: object
+  required: [type, ticketId, fromBoardId, toBoardId, movedBy]
+  properties:
+    type:
+      type: string
+      enum: [ticket.moved]
+    ticketId:
+      type: string
+    fromBoardId:
+      type: string
+    toBoardId:
+      type: string
+    movedBy:
+      type: string
+
 FilterInfo:
   type: object
   required:

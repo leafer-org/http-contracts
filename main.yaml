@@ -418,6 +418,10 @@ paths:
   /admin/tickets/{ticketId}/comments:
     post:
       $ref: "./endpoints/tickets/tickets.yaml#/addAdminTicketComment"
+  # ── Tickets: SSE ───────────────────────────────────────
+  /admin/boards/{boardId}/stream:
+    get:
+      $ref: "./endpoints/tickets/stream.yaml#/getAdminBoardStream"
   # ── Tickets: Admin Triggers ────────────────────────────
   /admin/boards/triggers:
     get:
