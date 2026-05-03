@@ -122,10 +122,6 @@ ItemListView:
             endTime:
               type: string
         - type: "null"
-    distanceKm:
-      type:
-        - number
-        - "null"
     cardAgeGroup:
       type:
         - string
