@@ -96,12 +96,17 @@ getCategoryItems:
         minimum: 0
         maximum: 5
       description: Минимальный рейтинг
-    - name: attributeValues
+    - name: attributeFilters
       in: query
       required: false
       schema:
         type: string
-      description: JSON-массив фильтров по атрибутам [{"attributeId":"...","value":"..."}]
+      description: |
+        JSON-массив фильтров по атрибутам с дискриминантом по `type`:
+        `[{"attributeId":"...","type":"enum","values":["a","b"]}
+        | {"attributeId":"...","type":"number","min":1,"max":10}
+        | {"attributeId":"...","type":"boolean","value":true}
+        | {"attributeId":"...","type":"text","value":"foo"}]`
     - name: lat
       in: query
       required: false

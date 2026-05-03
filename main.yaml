@@ -135,12 +135,18 @@ paths:
   /search:
     get:
       $ref: "./endpoints/discovery/search.yaml#/searchItems"
+  /search/suggestions:
+    get:
+      $ref: "./endpoints/discovery/search-suggestions.yaml#/searchSuggestions"
   /liked-items:
     get:
       $ref: "./endpoints/discovery/liked-items.yaml#/getLikedItems"
   /items/{itemId}:
     get:
       $ref: "./endpoints/discovery/item-detail.yaml#/getDiscoveryItemDetail"
+  /orgs/{orgId}:
+    get:
+      $ref: "./endpoints/discovery/organization-detail.yaml#/getDiscoveryOrganizationDetail"
   /items/{itemId}/like:
     post:
       $ref: "./endpoints/discovery/like-item.yaml#/likeItem"
@@ -256,6 +262,9 @@ paths:
   /organizations:
     post:
       $ref: "./endpoints/organization/organizations.yaml#/createOrganization"
+  /organizations/my:
+    get:
+      $ref: "./endpoints/organization/organizations.yaml#/listMyOrganizations"
   /organizations/claim:
     post:
       $ref: "./endpoints/organization/organizations.yaml#/claimOrganization"

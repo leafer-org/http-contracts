@@ -62,6 +62,7 @@ ItemListView:
   required:
     - itemId
     - typeId
+    - typeName
     - title
     - hasVideo
     - reviewCount
@@ -70,6 +71,8 @@ ItemListView:
     itemId:
       type: string
     typeId:
+      type: string
+    typeName:
       type: string
     title:
       type: string
@@ -577,3 +580,88 @@ SearchFacets:
       type: array
       items:
         $ref: "#/SearchFacetAttribute"
+
+OrganizationProfile:
+  type: object
+  required:
+    - organizationId
+    - name
+    - description
+    - media
+    - contacts
+    - reviewCount
+  properties:
+    organizationId:
+      type: string
+    name:
+      type: string
+    description:
+      type: string
+    avatarId:
+      type:
+        - string
+        - "null"
+    avatarUrl:
+      type:
+        - string
+        - "null"
+      format: uri
+    media:
+      type: array
+      items:
+        $ref: ../shared/media.yaml#/ResolvedMediaItem
+    contacts:
+      type: array
+      items:
+        type: object
+        required:
+          - type
+          - value
+        properties:
+          type:
+            type: string
+            enum: [phone, email, link]
+          value:
+            type: string
+          label:
+            type:
+              - string
+              - "null"
+    team:
+      oneOf:
+        - type: object
+          required:
+            - title
+            - members
+          properties:
+            title:
+              type: string
+            members:
+              type: array
+              items:
+                type: object
+                required:
+                  - name
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type:
+                      - string
+                      - "null"
+                  avatarUrl:
+                    type:
+                      - string
+                      - "null"
+                    format: uri
+                  employeeUserId:
+                    type:
+                      - string
+                      - "null"
+        - type: "null"
+    rating:
+      type:
+        - number
+        - "null"
+    reviewCount:
+      type: integer

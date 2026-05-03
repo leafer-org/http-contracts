@@ -1,0 +1,39 @@
+getDiscoveryOrganizationDetail:
+  operationId: getDiscoveryOrganizationDetail
+  tags:
+    - Discovery
+  description: |
+    Публичная страница организации в discovery: профиль (имя, аватар,
+    рейтинг, число отзывов) + до 50 последних товаров организации,
+    отсортированных по `publishedAt` DESC. Пагинации пока нет.
+  parameters:
+    - $ref: ../../shared/device.yaml#/DeviceDprHeader
+    - name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID организации
+  responses:
+    "200":
+      description: Профиль и товары организации
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - profile
+              - items
+            properties:
+              profile:
+                $ref: ../../shared/discovery.yaml#/OrganizationProfile
+              items:
+                type: array
+                items:
+                  $ref: ../../shared/discovery.yaml#/ItemListView
+    "404":
+      description: Организация не найдена
+      content:
+        application/json:
+          schema:
+            $ref: ../../shared/error-response.yaml#/DomainErrorResponse

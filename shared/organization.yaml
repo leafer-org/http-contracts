@@ -149,6 +149,40 @@ InfoDraft:
     canSubmitForModeration:
       type: boolean
 
+# ── My Organizations ───────────────────────────────
+
+OrganizationListItem:
+  type: object
+  required:
+    - id
+    - name
+    - description
+    - avatarUrl
+    - isOwner
+    - isPublished
+    - draftStatus
+    - updatedAt
+  properties:
+    id:
+      type: string
+    name:
+      type: string
+    description:
+      type: string
+    avatarUrl:
+      type:
+        - string
+        - "null"
+    isOwner:
+      type: boolean
+    isPublished:
+      type: boolean
+    draftStatus:
+      $ref: "#/InfoDraftStatus"
+    updatedAt:
+      type: string
+      format: date-time
+
 # ── Employees ──────────────────────────────────────
 
 Employee:
