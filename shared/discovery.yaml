@@ -613,20 +613,7 @@ OrganizationProfile:
     contacts:
       type: array
       items:
-        type: object
-        required:
-          - type
-          - value
-        properties:
-          type:
-            type: string
-            enum: [phone, email, link]
-          value:
-            type: string
-          label:
-            type:
-              - string
-              - "null"
+        $ref: ../shared/cms.yaml#/ContactLink
     team:
       oneOf:
         - type: object

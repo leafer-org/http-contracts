@@ -438,3 +438,79 @@ paths:
   /admin/boards/filters:
     get:
       $ref: "./endpoints/tickets/triggers.yaml#/getAdminTicketFilters"
+
+  # ── Chat ───────────────────────────────────────────────
+  /chats/centrifugo-token:
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/getCentrifugoToken"
+  /chats:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/openChatWithOrganization"
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/listMyChats"
+  /chats/support:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/openChatWithSupport"
+  /chats/unread-summary:
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/getUnreadSummary"
+  /chats/search:
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/searchInMyChats"
+  /chats/{chatId}/search:
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/searchInChat"
+  /chats/{chatId}:
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/getChatDetail"
+  /chats/{chatId}/messages:
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/getChatMessages"
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/sendMessageInChat"
+  /chats/{chatId}/messages/{messageId}:
+    patch:
+      $ref: "./endpoints/chat/chats.yaml#/editMessageInChat"
+    delete:
+      $ref: "./endpoints/chat/chats.yaml#/deleteMessageInChat"
+  /chats/{chatId}/messages/{messageId}/report:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/reportMessage"
+  /chats/{chatId}/report:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/reportChat"
+  /chats/{chatId}/read:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/markChatRead"
+  /admin/chats:
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/listAdminChats"
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/openChatAsSupport"
+  /admin/chats/search:
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/operatorSearchAll"
+  /admin/chats/{chatId}/search:
+    get:
+      $ref: "./endpoints/chat/chats.yaml#/operatorSearchInChat"
+  /admin/chats/{chatId}/messages:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/sendMessageAsOperator"
+  /admin/chats/{chatId}/participants/{participantId}/claim:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/claimChatSlot"
+  /admin/chats/{chatId}/participants/{participantId}/release:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/releaseChatSlot"
+  /admin/chats/{chatId}/participants/{participantId}/reassign:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/reassignChatSlot"
+  /admin/chats/{chatId}/block:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/blockChat"
+  /admin/chats/{chatId}/unblock:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/unblockChat"
+  /admin/chats/{chatId}/close:
+    post:
+      $ref: "./endpoints/chat/chats.yaml#/closeChat"
