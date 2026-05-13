@@ -176,8 +176,6 @@ CategoryListItem:
     - categoryId
     - name
     - iconUrl
-    - childCount
-    - itemCount
   properties:
     categoryId:
       type: string
@@ -185,12 +183,6 @@ CategoryListItem:
       type: string
     iconUrl:
       type: string
-    childCount:
-      type: integer
-      minimum: 0
-    itemCount:
-      type: integer
-      minimum: 0
 
 AttributeSchema:
   oneOf:

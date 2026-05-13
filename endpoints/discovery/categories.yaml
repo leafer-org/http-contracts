@@ -2,7 +2,7 @@ getCategories:
   operationId: getCategories
   tags:
     - Discovery
-  description: Список дочерних категорий с количеством товаров
+  description: Список дочерних категорий каталога
   parameters:
     - name: parentCategoryId
       in: query
