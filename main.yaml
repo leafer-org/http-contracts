@@ -511,6 +511,3 @@ paths:
   /admin/chats/{chatId}/unblock:
     post:
       $ref: "./endpoints/chat/chats.yaml#/unblockChat"
-  /admin/chats/{chatId}/close:
-    post:
-      $ref: "./endpoints/chat/chats.yaml#/closeChat"

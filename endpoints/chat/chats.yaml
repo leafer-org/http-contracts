@@ -109,10 +109,9 @@ sendMessageInChat:
         application/json:
           schema:
             type: object
-            required: [messageId, reopened]
+            required: [messageId]
             properties:
               messageId: { type: string }
-              reopened: { type: boolean }
     "400": { $ref: "#/components/DomainError" }
     "403": { $ref: "#/components/DomainError" }
     "404": { $ref: "#/components/DomainError" }
@@ -355,7 +354,7 @@ operatorSearchAll:
     - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 50 } }
     - { name: slotKind, in: query, schema: { type: string, enum: [organization, support] } }
     - { name: orgId, in: query, schema: { type: string } }
-    - { name: status, in: query, schema: { type: string, enum: [open, closed, blocked] } }
+    - { name: status, in: query, schema: { type: string, enum: [open, blocked] } }
     - { name: from, in: query, schema: { type: string, format: date-time } }
     - { name: to, in: query, schema: { type: string, format: date-time } }
   responses:
@@ -451,11 +450,10 @@ sendMessageAsOperator:
         application/json:
           schema:
             type: object
-            required: [messageId, claimed, reopened]
+            required: [messageId, claimed]
             properties:
               messageId: { type: string }
               claimed: { type: boolean }
-              reopened: { type: boolean }
     "400": { $ref: "#/components/DomainError" }
     "403": { $ref: "#/components/DomainError" }
     "404": { $ref: "#/components/DomainError" }
@@ -548,27 +546,6 @@ unblockChat:
     "404": { $ref: "#/components/DomainError" }
     "409": { $ref: "#/components/DomainError" }
 
-closeChat:
-  operationId: closeChat
-  tags: [chat]
-  summary: Закрыть чат
-  security: [{ bearerAuth: [] }]
-  parameters:
-    - { name: chatId, in: path, required: true, schema: { type: string } }
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            reason: { type: string, nullable: true }
-  responses:
-    "204": { description: OK }
-    "403": { $ref: "#/components/DomainError" }
-    "404": { $ref: "#/components/DomainError" }
-    "409": { $ref: "#/components/DomainError" }
-
 listAdminChats:
   operationId: listAdminChats
   tags: [chat]
@@ -577,7 +554,7 @@ listAdminChats:
   parameters:
     - { name: slotKind, in: query, schema: { type: string, enum: [organization, support] } }
     - { name: orgId, in: query, schema: { type: string } }
-    - { name: status, in: query, schema: { type: string, enum: [open, closed, blocked] } }
+    - { name: status, in: query, schema: { type: string, enum: [open, blocked] } }
     - { name: assignedToMe, in: query, schema: { type: boolean } }
     - { name: unassigned, in: query, schema: { type: boolean } }
     - { name: from, in: query, schema: { type: integer, minimum: 0 } }
@@ -596,28 +573,53 @@ listAdminChats:
 components:
   ChatOpenResponse:
     type: object
-    required: [chatId, reused, reopened]
+    required: [chatId, reused]
     properties:
       chatId: { type: string }
       reused: { type: boolean }
-      reopened: { type: boolean }
+
+  ChatParticipantSubject:
+    description: >-
+      Кто/что стоит за slot'ом участника. Discriminated union по полю kind
+      (значение литералом из enum внутри каждого варианта).
+      Display-поля каждого варианта (fullName/name/avatarUrl/logoUrl) могут
+      быть null при недоступности enrichment'а.
+    oneOf:
+      - $ref: "../../shared/user-ref.yaml#/UserRef"
+      - $ref: "../../shared/organization-ref.yaml#/OrganizationRef"
+
+  ChatParticipant:
+    type: object
+    required: [id]
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: ID самого slot'а в чате — используется в claim/release endpoints.
+      subject:
+        description: >-
+          Кто стоит за slot'ом. null когда subjectId в БД не зафиксирован
+          (зарезервированный slot без привязки к user/org).
+        oneOf:
+          - $ref: "#/components/ChatParticipantSubject"
+          - type: "null"
+      assignedUser:
+        description: >-
+          Сотрудник, claim'нувший org-slot. null для user-slot'ов и
+          не-claim'нутых org-slot'ов.
+        oneOf:
+          - $ref: "../../shared/user-ref.yaml#/UserRef"
+          - type: "null"
 
   ChatListItem:
     type: object
     required: [chatId, status, participants, lastMessage, myUnreadCount, updatedAt]
     properties:
       chatId: { type: string }
-      status: { type: string, enum: [open, closed, blocked] }
+      status: { type: string, enum: [open, blocked] }
       participants:
         type: array
-        items:
-          type: object
-          required: [id, kind, subjectId, assignedUserId]
-          properties:
-            id: { type: string }
-            kind: { type: string, enum: [user, organization, support] }
-            subjectId: { type: string, nullable: true }
-            assignedUserId: { type: string, nullable: true }
+        items: { $ref: "#/components/ChatParticipant" }
       contextItemId: { type: string, nullable: true }
       lastMessage:
         nullable: true
@@ -627,6 +629,14 @@ components:
           messageId: { type: string }
           preview: { type: string }
           senderParticipantId: { type: string, nullable: true }
+          senderUser:
+            description: >-
+              Конкретный пользователь, отправивший сообщение
+              (для org-slot'а — claim'нувший сотрудник). null если
+              senderParticipantId не определён или enrichment недоступен.
+            oneOf:
+              - $ref: "../../shared/user-ref.yaml#/UserRef"
+              - type: "null"
           createdAt: { type: string, format: date-time }
       myUnreadCount: { type: integer }
       updatedAt: { type: string, format: date-time }

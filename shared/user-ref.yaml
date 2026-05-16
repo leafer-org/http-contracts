@@ -1,0 +1,23 @@
+# Облегчённое представление пользователя.
+# Display-поля (fullName, avatarUrl) могут быть null, если данные недоступны:
+# - источник enrichment'а (БД directory) недоступен;
+# - пользователь удалён.
+# kind заполнен всегда — используется для discriminator'а в oneOf'ах.
+UserRef:
+  type: object
+  required:
+    - kind
+    - id
+  properties:
+    kind:
+      type: string
+      enum: [user]
+    id:
+      type: string
+      format: uuid
+    fullName:
+      type: string
+      nullable: true
+    avatarUrl:
+      type: string
+      nullable: true

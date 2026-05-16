@@ -1,0 +1,23 @@
+# Облегчённое представление организации.
+# Display-поля (name, logoUrl) могут быть null, если данные недоступны:
+# - источник enrichment'а (БД directory) недоступен;
+# - организация не опубликована или удалена.
+# kind заполнен всегда — используется для discriminator'а в oneOf'ах.
+OrganizationRef:
+  type: object
+  required:
+    - kind
+    - id
+  properties:
+    kind:
+      type: string
+      enum: [organization]
+    id:
+      type: string
+      format: uuid
+    name:
+      type: string
+      nullable: true
+    logoUrl:
+      type: string
+      nullable: true
