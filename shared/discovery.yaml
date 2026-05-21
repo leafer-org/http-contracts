@@ -31,8 +31,14 @@ ItemPayment:
 ItemOwnerSummary:
   type: object
   required:
+    - organizationId
     - name
+    - hasUnreadFreshPosts
   properties:
+    # Нужен клиенту для навигации на /organizations/{orgId}/posts при тапе
+    # по аватару с кружочком свежести.
+    organizationId:
+      type: string
     name:
       type: string
     avatarId:
@@ -44,6 +50,10 @@ ItemOwnerSummary:
         - string
         - "null"
       format: uri
+    # Кружочек свежести: у орг есть пост, не просмотренный текущим user'ом,
+    # не старше 7 дней. Для анонима всегда false. Подробнее см. posts-views.spec.
+    hasUnreadFreshPosts:
+      type: boolean
 
 ItemLocationSummary:
   type: object

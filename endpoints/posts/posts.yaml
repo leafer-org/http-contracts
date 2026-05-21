@@ -1,0 +1,389 @@
+# ─────────────────────────────────────────────────────────────────────────
+# Posts — публикация
+# ─────────────────────────────────────────────────────────────────────────
+
+publishPost:
+  operationId: publishPost
+  tags: [posts]
+  summary: Опубликовать пост от лица организации
+  security: [{ bearerAuth: [] }]
+  parameters:
+    - name: orgId
+      in: path
+      required: true
+      schema: { type: string }
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [text, media]
+          properties:
+            text: { type: string }
+            media:
+              type: array
+              items: { $ref: "#/components/PostMediaItem" }
+  responses:
+    "201":
+      description: Пост создан
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [postId]
+            properties:
+              postId: { type: string }
+    "400": { $ref: "#/components/DomainError" }
+    "401": { description: Не авторизован }
+    "403": { $ref: "#/components/DomainError" }
+    "404": { $ref: "#/components/DomainError" }
+
+# ─────────────────────────────────────────────────────────────────────────
+# Posts — чтение
+# ─────────────────────────────────────────────────────────────────────────
+
+getOrganizationPosts:
+  operationId: getOrganizationPosts
+  tags: [posts]
+  summary: Список постов организации
+  parameters:
+    - name: orgId
+      in: path
+      required: true
+      schema: { type: string }
+    - name: cursor
+      in: query
+      required: false
+      schema: { type: string }
+    - name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 50 }
+  responses:
+    "200":
+      description: Список постов
+      content:
+        application/json:
+          schema: { $ref: "#/components/PostListResponse" }
+
+getPostDetail:
+  operationId: getPostDetail
+  tags: [posts]
+  summary: Получить один пост
+  parameters:
+    - name: postId
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    "200":
+      description: Пост
+      content:
+        application/json:
+          schema: { $ref: "#/components/PostDetail" }
+    "404": { $ref: "#/components/DomainError" }
+
+# ─────────────────────────────────────────────────────────────────────────
+# Posts — изменение
+# ─────────────────────────────────────────────────────────────────────────
+
+editPost:
+  operationId: editPost
+  tags: [posts]
+  summary: Редактировать пост
+  security: [{ bearerAuth: [] }]
+  parameters:
+    - name: postId
+      in: path
+      required: true
+      schema: { type: string }
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            text: { type: string }
+            media:
+              type: array
+              items: { $ref: "#/components/PostMediaItem" }
+  responses:
+    "204": { description: Обновлено }
+    "400": { $ref: "#/components/DomainError" }
+    "401": { description: Не авторизован }
+    "403": { $ref: "#/components/DomainError" }
+    "404": { $ref: "#/components/DomainError" }
+
+deletePost:
+  operationId: deletePost
+  tags: [posts]
+  summary: Удалить пост (hard delete)
+  security: [{ bearerAuth: [] }]
+  parameters:
+    - name: postId
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    "204": { description: Удалено }
+    "401": { description: Не авторизован }
+    "403": { $ref: "#/components/DomainError" }
+    "404": { $ref: "#/components/DomainError" }
+
+# ─────────────────────────────────────────────────────────────────────────
+# Likes
+# ─────────────────────────────────────────────────────────────────────────
+
+likePost:
+  operationId: likePost
+  tags: [posts]
+  summary: Лайкнуть пост (idempotent)
+  security: [{ bearerAuth: [] }]
+  parameters:
+    - name: postId
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    "200":
+      description: Лайк зафиксирован
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [liked, likeCount]
+            properties:
+              liked: { type: boolean, enum: [true] }
+              likeCount: { type: integer }
+    "401": { description: Не авторизован }
+    "404": { $ref: "#/components/DomainError" }
+
+unlikePost:
+  operationId: unlikePost
+  tags: [posts]
+  summary: Убрать лайк (idempotent)
+  security: [{ bearerAuth: [] }]
+  parameters:
+    - name: postId
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    "200":
+      description: Лайк снят
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [liked, likeCount]
+            properties:
+              liked: { type: boolean, enum: [false] }
+              likeCount: { type: integer }
+    "401": { description: Не авторизован }
+    "404": { $ref: "#/components/DomainError" }
+
+# ─────────────────────────────────────────────────────────────────────────
+# Comments
+# ─────────────────────────────────────────────────────────────────────────
+
+createPostComment:
+  operationId: createPostComment
+  tags: [posts]
+  summary: Оставить коммент к посту
+  security: [{ bearerAuth: [] }]
+  parameters:
+    - name: postId
+      in: path
+      required: true
+      schema: { type: string }
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [text]
+          properties:
+            text: { type: string }
+  responses:
+    "201":
+      description: Коммент создан
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [commentId]
+            properties:
+              commentId: { type: string }
+    "400": { $ref: "#/components/DomainError" }
+    "401": { description: Не авторизован }
+    "404": { $ref: "#/components/DomainError" }
+
+getPostComments:
+  operationId: getPostComments
+  tags: [posts]
+  summary: Список комментов к посту
+  parameters:
+    - name: postId
+      in: path
+      required: true
+      schema: { type: string }
+    - name: cursor
+      in: query
+      required: false
+      schema: { type: string }
+    - name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100 }
+  responses:
+    "200":
+      description: Список комментов
+      content:
+        application/json:
+          schema: { $ref: "#/components/CommentListResponse" }
+    "404": { $ref: "#/components/DomainError" }
+
+deletePostComment:
+  operationId: deletePostComment
+  tags: [posts]
+  summary: Удалить коммент (hard delete)
+  security: [{ bearerAuth: [] }]
+  parameters:
+    - name: commentId
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    "204": { description: Удалено }
+    "401": { description: Не авторизован }
+    "403": { $ref: "#/components/DomainError" }
+    "404": { $ref: "#/components/DomainError" }
+
+# ─────────────────────────────────────────────────────────────────────────
+# Views
+# ─────────────────────────────────────────────────────────────────────────
+
+recordPostViews:
+  operationId: recordPostViews
+  tags: [posts]
+  summary: Зафиксировать просмотры постов (batch от intersection observer)
+  security: [{ bearerAuth: [] }]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [postIds]
+          properties:
+            postIds:
+              type: array
+              items: { type: string }
+              maxItems: 100
+  responses:
+    "204": { description: Просмотры зафиксированы (или пустой массив — no-op) }
+    "400": { $ref: "#/components/DomainError" }
+    "401": { description: Не авторизован }
+
+# ─────────────────────────────────────────────────────────────────────────
+# Components
+# ─────────────────────────────────────────────────────────────────────────
+
+components:
+  DomainError:
+    description: Ошибка домена
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [code]
+          properties:
+            code: { type: string }
+            message: { type: string }
+
+  PostMediaItem:
+    type: object
+    required: [type, mediaId]
+    properties:
+      type:
+        type: string
+        enum: [image, video]
+      mediaId:
+        type: string
+
+  PostDetail:
+    type: object
+    required:
+      - postId
+      - organizationId
+      - authorUserId
+      - text
+      - media
+      - moderationStatus
+      - likeCount
+      - commentCount
+      - viewCount
+      - viewerLiked
+      - editedAt
+      - createdAt
+    properties:
+      postId: { type: string }
+      organizationId: { type: string }
+      authorUserId: { type: string }
+      text: { type: string }
+      media:
+        type: array
+        items: { $ref: "#/components/PostMediaItem" }
+      moderationStatus:
+        type: string
+        enum: [visible, hidden]
+      likeCount: { type: integer }
+      commentCount: { type: integer }
+      viewCount: { type: integer }
+      viewerLiked: { type: boolean }
+      editedAt: { type: string, format: date-time, nullable: true }
+      createdAt: { type: string, format: date-time }
+
+  PostListResponse:
+    type: object
+    required: [posts, nextCursor]
+    properties:
+      posts:
+        type: array
+        items: { $ref: "#/components/PostDetail" }
+      nextCursor:
+        type: string
+        nullable: true
+
+  CommentDetail:
+    type: object
+    required:
+      - commentId
+      - postId
+      - authorUserId
+      - text
+      - moderationStatus
+      - createdAt
+    properties:
+      commentId: { type: string }
+      postId: { type: string }
+      authorUserId: { type: string }
+      text: { type: string }
+      moderationStatus:
+        type: string
+        enum: [visible, hidden]
+      createdAt: { type: string, format: date-time }
+
+  CommentListResponse:
+    type: object
+    required: [comments, nextCursor]
+    properties:
+      comments:
+        type: array
+        items: { $ref: "#/components/CommentDetail" }
+      nextCursor:
+        type: string
+        nullable: true

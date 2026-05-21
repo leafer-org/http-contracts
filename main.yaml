@@ -439,6 +439,36 @@ paths:
     get:
       $ref: "./endpoints/tickets/triggers.yaml#/getAdminTicketFilters"
 
+  # ── Posts ──────────────────────────────────────────────
+  /organizations/{orgId}/posts:
+    post:
+      $ref: "./endpoints/posts/posts.yaml#/publishPost"
+    get:
+      $ref: "./endpoints/posts/posts.yaml#/getOrganizationPosts"
+  /posts/{postId}:
+    get:
+      $ref: "./endpoints/posts/posts.yaml#/getPostDetail"
+    patch:
+      $ref: "./endpoints/posts/posts.yaml#/editPost"
+    delete:
+      $ref: "./endpoints/posts/posts.yaml#/deletePost"
+  /posts/{postId}/like:
+    put:
+      $ref: "./endpoints/posts/posts.yaml#/likePost"
+    delete:
+      $ref: "./endpoints/posts/posts.yaml#/unlikePost"
+  /posts/{postId}/comments:
+    post:
+      $ref: "./endpoints/posts/posts.yaml#/createPostComment"
+    get:
+      $ref: "./endpoints/posts/posts.yaml#/getPostComments"
+  /comments/{commentId}:
+    delete:
+      $ref: "./endpoints/posts/posts.yaml#/deletePostComment"
+  /post-views:
+    post:
+      $ref: "./endpoints/posts/posts.yaml#/recordPostViews"
+
   # ── Chat ───────────────────────────────────────────────
   /chats/centrifugo-token:
     get:
