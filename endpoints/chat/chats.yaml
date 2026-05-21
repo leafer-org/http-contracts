@@ -38,13 +38,15 @@ openChatWithOrganization:
           required: [organizationId, message]
           properties:
             organizationId: { type: string }
-            contextItemId: { type: string, nullable: true }
             message:
               type: object
               required: [text, mediaIds]
               properties:
                 text: { type: string, nullable: true }
                 mediaIds: { type: array, items: { type: string } }
+                attachments:
+                  type: array
+                  items: { $ref: "#/components/MessageAttachment" }
   responses:
     "200":
       description: Чат создан или продолжён
@@ -75,6 +77,9 @@ openChatWithSupport:
               properties:
                 text: { type: string, nullable: true }
                 mediaIds: { type: array, items: { type: string } }
+                attachments:
+                  type: array
+                  items: { $ref: "#/components/MessageAttachment" }
   responses:
     "200":
       description: Чат создан или продолжён
@@ -102,6 +107,9 @@ sendMessageInChat:
           properties:
             text: { type: string, nullable: true }
             mediaIds: { type: array, items: { type: string } }
+            attachments:
+              type: array
+              items: { $ref: "#/components/MessageAttachment" }
   responses:
     "200":
       description: Отправлено
@@ -414,6 +422,9 @@ openChatAsSupport:
               properties:
                 text: { type: string, nullable: true }
                 mediaIds: { type: array, items: { type: string } }
+                attachments:
+                  type: array
+                  items: { $ref: "#/components/MessageAttachment" }
   responses:
     "200":
       description: OK
@@ -443,6 +454,9 @@ sendMessageAsOperator:
           properties:
             text: { type: string, nullable: true }
             mediaIds: { type: array, items: { type: string } }
+            attachments:
+              type: array
+              items: { $ref: "#/components/MessageAttachment" }
   responses:
     "200":
       description: Отправлено
@@ -620,7 +634,6 @@ components:
       participants:
         type: array
         items: { $ref: "#/components/ChatParticipant" }
-      contextItemId: { type: string, nullable: true }
       lastMessage:
         nullable: true
         type: object
@@ -663,6 +676,12 @@ components:
       kind: { type: string, enum: [text, media, system] }
       text: { type: string, nullable: true }
       mediaIds: { type: array, items: { type: string } }
+      attachments:
+        description: >-
+          Прикрепляемые карточки публичных данных (товар и т.п.).
+          Иммутабельны: edit меняет только text/mediaIds.
+        type: array
+        items: { $ref: "#/components/MessageAttachment" }
       systemEvent:
         nullable: true
         type: object
@@ -672,6 +691,17 @@ components:
       createdAt: { type: string, format: date-time }
       editedAt: { type: string, format: date-time, nullable: true }
       deletedAt: { type: string, format: date-time, nullable: true }
+
+  MessageAttachment:
+    description: >-
+      Карточка-вложение к сообщению. Discriminated union по полю kind.
+      Расширение: новый context = новый вариант в oneOf.
+    oneOf:
+      - type: object
+        required: [kind, itemId]
+        properties:
+          kind: { type: string, enum: [item-ref] }
+          itemId: { type: string }
 
   SearchHit:
     type: object
@@ -688,7 +718,7 @@ components:
 
   ChatPreview:
     type: object
-    required: [partyOther, contextItemId]
+    required: [partyOther]
     properties:
       partyOther:
         type: object
@@ -696,7 +726,6 @@ components:
         properties:
           kind: { type: string, enum: [user, organization, support] }
           subjectId: { type: string, nullable: true }
-      contextItemId: { type: string, nullable: true }
 
   SearchResultsGlobal:
     type: object
