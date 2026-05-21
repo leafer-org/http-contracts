@@ -206,6 +206,11 @@ BaseWidgetSettings:
       type: boolean
     showOnCard:
       type: boolean
+    material:
+      type: boolean
+      description: |
+        Если true (по умолчанию) — изменения значения этого виджета требуют повторной модерации
+        опубликованного товара. Если false — изменения публикуются сразу без модерации.
 
 PaymentWidgetSettings:
   type: object
@@ -222,6 +227,11 @@ PaymentWidgetSettings:
       type: boolean
     showOnCard:
       type: boolean
+    material:
+      type: boolean
+      description: |
+        Если true (по умолчанию) — изменения значения этого виджета требуют повторной модерации.
+        Если false — публикуются сразу.
     allowedStrategies:
       type: array
       items:
@@ -241,6 +251,11 @@ EventDateTimeWidgetSettings:
       type: boolean
     showOnCard:
       type: boolean
+    material:
+      type: boolean
+      description: |
+        Если true (по умолчанию) — изменения значения этого виджета требуют повторной модерации.
+        Если false — публикуются сразу.
     maxDates:
       type:
         - integer
